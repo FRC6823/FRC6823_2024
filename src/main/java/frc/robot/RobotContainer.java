@@ -1,63 +1,277 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoCommandGroup;
+import frc.robot.commands.FieldSpaceDrive;
+import frc.robot.commands.LineUp;
+import frc.robot.commands.RobotSpaceDrive;
+import frc.robot.commands.StrafeLeft;
+import frc.robot.commands.StrafeRight;
+import frc.robot.subsystems.BetterShooter;
+import frc.robot.subsystems.GripperAngleSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
+import frc.robot.subsystems.PulleySubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.ThrottleSubsystem;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+    // test commit
+    public SwerveDriveSubsystem swerveDrive;
+    public Pigeon2Handler pigeon;
+    public LimeLightSubsystem limeLight;
+    public PneumaticSubsystem pneumatics;
+    public LiftSubsystem lift;
+    public PulleySubsystem pulley;
+    public GripperAngleSubsystem gripperAngle;
+    public LEDSubsystem LEDs;
+    public ThrottleSubsystem motor1;
+    public BetterShooter shooter;
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    private FieldSpaceDrive fieldSpaceDriveCommand;
+    private RobotSpaceDrive robotSpaceDriveCommand;
+    private PositionHandler positionHandler;
+    //private PathHandler pathHandler;
+    private LineUp left;
+    private LineUp right;
+    private LineUp pickup;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
+    private AutoCommandGroup auto;
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    private JoystickHandler joy3;
+    private JoystickHandler joy4;
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+    private SendableChooser<Integer> autoChooser;
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+    public SwerveDriveSubsystem getSwervedriveSubsystem() {
+        return swerveDrive;
+    }
+
+    public Pigeon2Handler getPigeon2Handler() {
+        return pigeon;
+    }
+
+    // public PneumaticSubsystem getPneumatics(){
+    // return pneumatics;
+    // }
+
+    // public PulleySubsystem getPulley(){
+    // return pulley;
+    // }
+
+    // public LiftSubsystem getLift(){
+    // return lift;
+    // }
+
+    // public GripperAngleSubsystem getGripperAngle(){
+    // return gripperAngle;
+    // }
+
+    public PositionHandler getPositionHandler() {
+        return positionHandler;
+    }
+
+    /*
+    public PathHandler getPathHandler() {
+        return pathHandler;
+    }
+    */
+    public RobotContainer() {
+        pigeon = new Pigeon2Handler(); // pigeon2 input
+        limeLight = new LimeLightSubsystem();
+        swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
+        shooter = new BetterShooter();
+        // pneumatics = new PneumaticSubsystem();
+        // lift = new LiftSubsystem();
+        // pulley = new PulleySubsystem();
+        // gripperAngle = new GripperAngleSubsystem();
+        // LEDs = new LEDSubsystem(0);
+
+        joy3 = new JoystickHandler(3);
+        joy4 = new JoystickHandler(4);
+        motor1 = new ThrottleSubsystem(12, joy3);
+
+        // Field space uses pigeon2 to get its angle
+        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joy3, pigeon);
+        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
+        swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
+
+        // left = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "left");
+        // right = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "right");
+        // pickup = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "pickup");
+
+        positionHandler = new PositionHandler(lift, pulley, gripperAngle);
+        //pathHandler = new PathHandler(swerveDrive);
+
+        autoChooser = new SendableChooser<Integer>();
+        autoChooser.setDefaultOption("Score", 1);
+        autoChooser.addOption("Score, Backup", 2);
+        autoChooser.addOption("Score, Balance", 3);
+        autoChooser.addOption("Score, Backup, Floor Pose", 4);
+        autoChooser.addOption("Score, Backup, Start Pose", 5);
+        autoChooser.addOption("Score, Start Pose", 6);
+        autoChooser.addOption("Score, Over, Balance", 7);
+        autoChooser.addOption("Path Planner", 8);
+
+        Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);
+
+        pigeon.setYaw(180);
+        pigeon.setPitchOffset(pigeon.getPitch());
+        pigeon.setRollOffset(pigeon.getRoll());
+        // fieldSpaceDriveCommand.zero();
+        configureButtonBindings();
+    }
+
+    public Command getAutoCommandGroup() {
+        auto = new AutoCommandGroup(this, autoChooser.getSelected());
+        return auto;
+    }
+
+    private void configureButtonBindings() {
+
+        //Shooter Testing Stuff
+        joy3.button(2).whileTrue(new InstantCommand(() -> shooter.setSpeed(joy3.getAxis6())));
+
+
+
+
+        // Gripper toggle
+        // joy3.button(1).whileTrue(new InstantCommand(() ->
+        // pneumatics.togglePneumaticState()));
+
+        // Toggle yaw lock
+        //joy3.button(2).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()))
+                //.onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()));
+
+        // This will set the current orientation to be "forward" for field drive
+        joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
+
+        // This will set the current orientation to be "backward" for field drive
+        joy3.button(4).whileTrue(new InstantCommand(() -> pigeon.setYaw(180)));
+
+        // This will toggle slow mode for drive
+        joy3.button(11).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode()))
+                .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode()));
+
+        // Snow plow break
+        joy3.button(6).whileTrue(new InstantCommand(() -> {
+            swerveDrive.brake();
+            fieldSpaceDriveCommand.drive(false);
+        })).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
+
+        // // Move to score high on left node
+        // joy3.button(10).whileTrue(left).whileTrue(new InstantCommand(() ->
+        // positionHandler.setPose(4)));
+
+        // // Move to score low on left node
+        // joy3.button(9).whileTrue(left).whileTrue(new InstantCommand(() ->
+        // positionHandler.setPose(3)));
+
+        // // Move to score high on right node
+        // joy3.button(14).whileTrue(right).whileTrue(new InstantCommand(() ->
+        // positionHandler.setPose(4)));
+
+        // // Move to score low on right node
+        // joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() ->
+        // positionHandler.setPose(3)));
+
+        // // Pickup
+        // joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> {
+        // positionHandler.setPose(1);
+        // pneumatics.open();
+        // }));
+
+        // Soft disable for lift/arm
+        // joy4.button(5).whileTrue(new InstantCommand(() -> {
+        // pulley.disable();
+        // lift.disable();
+        // gripperAngle.disable();
+        // })).onFalse(new InstantCommand(() -> {
+        // pulley.enable();
+        // lift.enable();
+        // gripperAngle.enable();
+        // }));
+
+        // Manual control commands
+        // joy4.button(2).whileTrue(new InstantCommand(() -> {
+        // lift.setSpeed(0.2);
+        // lift.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // lift.setSpeed(0);
+        // lift.setMode(true);
+        // }));
+
+        // joy4.button(3).whileTrue(new InstantCommand(() -> {
+        // lift.setSpeed(-0.2);
+        // lift.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // lift.setSpeed(0);
+        // lift.setMode(true);
+        // }));
+
+        // joy4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
+        // joy4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
+
+        // joy4.button(4).whileTrue(new InstantCommand(() -> {
+        // pulley.setSpeed(1);
+        // pulley.setMode(false);
+        // lift.setSpeed(1);
+        // lift.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // pulley.setMode(true);
+        // lift.setMode(true);
+        // }));
+
+        // joy4.button(1).whileTrue(new InstantCommand(() -> {
+        // pulley.setSpeed(-1);
+        // pulley.setMode(false);
+        // lift.setSpeed(-1);
+        // lift.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // pulley.setMode(true);
+        // lift.setMode(true);
+        // }));
+
+        // joy4.povLeft().whileTrue(new InstantCommand(() -> {
+        // gripperAngle.setSpeed(0.5);
+        // gripperAngle.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // gripperAngle.setSpeed(0);
+        // gripperAngle.setMode(true);
+        // }));
+
+        // joy4.povRight().whileTrue(new InstantCommand(() -> {
+        // gripperAngle.setSpeed(-0.5);
+        // gripperAngle.setMode(false);
+        // }))
+        // .onFalse(new InstantCommand(() -> {
+        // gripperAngle.setSpeed(0);
+        // gripperAngle.setMode(true);
+        // }));
+
+        joy4.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
+
+        joy4.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
+
+        // Cycling through presets
+        joy4.povUp().whileTrue(new InstantCommand(() -> {
+            positionHandler.increaseIndex();
+        })).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+
+        joy4.povDown().whileTrue(new InstantCommand(() -> {
+            positionHandler.decreaseIndex();
+        })).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+    }
 }
