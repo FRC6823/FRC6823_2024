@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+//import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
-import frc.robot.commands.LineUp;
+//import frc.robot.commands.LineUp;
 import frc.robot.commands.RobotSpaceDrive;
-import frc.robot.commands.StrafeLeft;
-import frc.robot.commands.StrafeRight;
+//import frc.robot.commands.StrafeLeft;
+//import frc.robot.commands.StrafeRight;
 import frc.robot.subsystems.BetterShooter;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -39,9 +39,9 @@ public class RobotContainer {
     private RobotSpaceDrive robotSpaceDriveCommand;
     private PositionHandler positionHandler;
     //private PathHandler pathHandler;
-    private LineUp left;
-    private LineUp right;
-    private LineUp pickup;
+    //private LineUp left;
+    //private LineUp right;
+    //private LineUp pickup;
 
     private AutoCommandGroup auto;
 
