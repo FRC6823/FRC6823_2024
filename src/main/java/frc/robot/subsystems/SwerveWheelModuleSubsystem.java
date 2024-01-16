@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 //import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
 
 //import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 //import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -27,7 +29,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private TalonFX angleMotor;
     private TalonFX speedMotor;
     private PIDController pidController;
-    private CANCoder angleEncoder;
+    private CANcoder angleEncoder;
     // private boolean calibrateMode;
     private double encoderOffset;
     private String motorName;
@@ -38,8 +40,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         // We're using TalonFX motors on CAN.
         this.angleMotor = new TalonFX(angleMotorChannel);
         this.speedMotor = new TalonFX(speedMotorChannel);
-        this.angleEncoder = new CANCoder(angleEncoderChannel); // CANCoder Encoder
-        this.speedMotor.setNeutralMode(NeutralMode.Brake);
+        this.angleEncoder = new CANcoder(angleEncoderChannel); // CANCoder Encoder
+        this.speedMotor.setNeutralMode(NeutralModeValue.Coast);
         // angleMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
         // speedMotor.configSupplyCurrentLimit(Constants.kdriveCurrentLimit);
         this.motorName = motorName;
@@ -95,20 +97,19 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition() - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue() - encoderOffset, 360);
         // return MathUtil.mod(angleEncoder.getAbsolutePosition(), 360);
     }
-
     public double getPositionRad() {
         return MathUtil.mod(getPosition(), 360) * Math.PI / 180;
     }
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE)
+            return -(speedMotor.getPosition().getValue() * Constants.WHEEL_CIRCUMFERENCE)
                     / (2048 * Constants.L2_RATIO);
         }
-        return (speedMotor.getSelectedSensorPosition() * Constants.WHEEL_CIRCUMFERENCE) / (2048 * Constants.L2_RATIO);
+        return (speedMotor.getPosition().getValue() * Constants.WHEEL_CIRCUMFERENCE) / (2048 * Constants.L2_RATIO);
     }
 
     public void stop() {
@@ -123,15 +124,15 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     }
 
     public void coast() {
-        speedMotor.setNeutralMode(NeutralMode.Coast);
+        speedMotor.setNeutralMode(NeutralModeValue.Coast);
     }
 
     public void brake() {
-        speedMotor.setNeutralMode(NeutralMode.Brake);
+        speedMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     public void resetSensor() {
-        speedMotor.setSelectedSensorPosition(0);
+        speedMotor.setPosition(0);
     }
 
     public SwerveModulePosition getSwerveModulePosition() {
