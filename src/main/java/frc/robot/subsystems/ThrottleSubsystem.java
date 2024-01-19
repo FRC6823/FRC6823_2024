@@ -28,7 +28,7 @@ public class ThrottleSubsystem extends SubsystemBase {
     }
 
     public void periodic() {
-        setSpeed((joy.getAxis6() + 1) / 2);
+        setSpeed(-(joy.getAxis6() - 1) / 2);
         motor.set(-speed);
         motor2.set(speed);
 
