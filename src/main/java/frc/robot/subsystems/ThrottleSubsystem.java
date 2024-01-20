@@ -9,13 +9,15 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ThrottleSubsystem extends SubsystemBase {
 
-    private CANSparkMax motor, motor2;
+    private CANSparkMax motor, motor2, motor3;
     double speed;
     JoystickHandler joy;
+    private double intakespeed;
 
     public ThrottleSubsystem(int id, JoystickHandler joy) {
         motor = new CANSparkMax(id, MotorType.kBrushless);
         motor2 = new CANSparkMax(14, MotorType.kBrushless);
+        motor3 = new CANSparkMax(16, MotorType.kBrushless);
         speed = 01;
         this.joy = joy;
     }
@@ -26,12 +28,21 @@ public class ThrottleSubsystem extends SubsystemBase {
             speed = 0;
         }
     }
+ // Make set speed and set intake speed to be same function later because same stuff sucks
+    public void setIntakeSpeed(double intakespeed) {
+        this.intakespeed = intakespeed;
+        if (intakespeed > .05) {
+            intakespeed = 0;
+        }
+    }
 
+// axis 5 is placeholder and check math later
     public void periodic() {
         setSpeed(-(joy.getAxis6() - 1) / 2);
+        setIntakeSpeed(-(joy.getAxis5() - 1) / 2);
         motor.set(-speed);
-        motor2.set(speed);
-
+        motor2.set(speed);        
+        motor3.set(intakespeed);
     }
 
 }
