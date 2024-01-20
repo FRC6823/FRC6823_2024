@@ -24,7 +24,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // private final double P = .008;
     // private final double I = .00001;
     private final double P = .009;
-    private final double I = .00002;
+    private final double I = .00001;
 
     private TalonFX angleMotor;
     private TalonFX speedMotor;
@@ -34,6 +34,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     private double encoderOffset;
     private String motorName;
     // private SimpleWidget speedLim;
+    
+
 
     public SwerveWheelModuleSubsystem(int angleMotorChannel, int speedMotorChannel, int angleEncoderChannel,
             String motorName, double offset) {
@@ -98,7 +100,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // calibrating the encoder offsets
     public double getPosition() {
         return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue() - encoderOffset, 360);
-        // return MathUtil.mod(angleEncoder.getAbsolutePosition(), 360);
+        //return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue(), 360);
     }
     public double getPositionRad() {
         return MathUtil.mod(getPosition(), 360) * Math.PI / 180;
@@ -120,6 +122,8 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Swerve CANCoder " + motorName, getPosition());
+        angleEncoder.getAbsolutePosition().refresh();
+        speedMotor.getPosition().refresh();
 
     }
 
