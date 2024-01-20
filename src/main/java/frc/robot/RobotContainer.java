@@ -12,7 +12,7 @@ import frc.robot.commands.FieldSpaceDrive;
 import frc.robot.commands.RobotSpaceDrive;
 //import frc.robot.commands.StrafeLeft;
 //import frc.robot.commands.StrafeRight;
-import frc.robot.subsystems.BetterShooter;
+// import frc.robot.subsystems.BetterShooter;
 import frc.robot.subsystems.GripperAngleSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
@@ -33,7 +33,7 @@ public class RobotContainer {
     public GripperAngleSubsystem gripperAngle;
     public LEDSubsystem LEDs;
     public ThrottleSubsystem motor1;
-    public BetterShooter shooter;
+    // public BetterShooter shooter;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     private RobotSpaceDrive robotSpaceDriveCommand;
@@ -88,7 +88,7 @@ public class RobotContainer {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         limeLight = new LimeLightSubsystem();
         swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
-        shooter = new BetterShooter();
+        // shooter = new BetterShooter();
         // pneumatics = new PneumaticSubsystem();
         // lift = new LiftSubsystem();
         // pulley = new PulleySubsystem();
@@ -138,7 +138,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         //Shooter Testing Stuff
-        joy3.button(2).whileTrue(new InstantCommand(() -> shooter.setSpeed(joy3.getAxis6())));
+        // joy3.button(2).whileTrue(new InstantCommand(() -> shooter.setSpeed(joy3.getAxis6())));
 
 
 
