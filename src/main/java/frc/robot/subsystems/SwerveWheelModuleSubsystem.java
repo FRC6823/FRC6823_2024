@@ -99,18 +99,27 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     // this method outputs position of the encoder to the smartDashBoard, useful for
     // calibrating the encoder offsets
     public double getPosition() {
-        return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue() - encoderOffset, 360);
+        
+        ////////////////TO DO
+        //We need to check our math here.  I'm not sure if getAbsolutePosition() returns the value range we're expecting.
+        return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue() - encoderOffset, 360);
         //return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue(), 360);
     }
     public double getPositionRad() {
+        ////////////////TO DO
+        //We need to check our math here.  I'm not sure if getAbsolutePosition() returns the value range we're expecting.
         return MathUtil.mod(getPosition(), 360) * Math.PI / 180;
     }
 
     public double getDistance() {
         if (motorName.equals("BR") || motorName.equals("FR")) {
-            return -(speedMotor.getPosition().getValue() * Constants.WHEEL_CIRCUMFERENCE)
+            ////////////TO DO
+            //We need to check the values coming out of .getposition compared to 2023.  Might need to change to getRotorPosition() or change our math.
+            return -(speedMotor.getPosition().refresh().getValue() * Constants.WHEEL_CIRCUMFERENCE)
                     / (2048 * Constants.L2_RATIO);
         }
+        ////////////TO DO
+        //We need to check the values coming out of .getposition compared to 2023.  Might need to change to getRotorPosition() or change our math.
         return (speedMotor.getPosition().getValue() * Constants.WHEEL_CIRCUMFERENCE) / (2048 * Constants.L2_RATIO);
     }
 
@@ -122,9 +131,6 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Swerve CANCoder " + motorName, getPosition());
-        angleEncoder.getAbsolutePosition().refresh();
-        speedMotor.getPosition().refresh();
-
     }
 
     public void coast() {

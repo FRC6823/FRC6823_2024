@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.FieldSpaceDrive;
 //import frc.robot.commands.LineUp;
-import frc.robot.commands.RobotSpaceDrive;
+// import frc.robot.commands.RobotSpaceDrive;
 //import frc.robot.commands.StrafeLeft;
 //import frc.robot.commands.StrafeRight;
 // import frc.robot.subsystems.BetterShooter;
@@ -36,7 +36,7 @@ public class RobotContainer {
     // public BetterShooter shooter;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
-    private RobotSpaceDrive robotSpaceDriveCommand;
+    //private RobotSpaceDrive robotSpaceDriveCommand;
     //RobotSpaceDrive is used later I don't know why it is says that it's not used
     private PositionHandler positionHandler;
     //private PathHandler pathHandler;
@@ -101,7 +101,7 @@ public class RobotContainer {
 
         // Field space uses pigeon2 to get its angle
         fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joy3, pigeon);
-        robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
+        //robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
         swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
 
         // left = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "left");
