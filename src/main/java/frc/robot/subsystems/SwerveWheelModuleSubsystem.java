@@ -85,7 +85,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
             angle = MathUtil.mod(angle, 360);
         }
 
-        double pidOut = -pidController.calculate(currentEncoderValue, angle);
+        double pidOut = pidController.calculate(currentEncoderValue, angle);
 
         angleMotor.set(pidOut);
 
@@ -102,7 +102,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
         
         ////////////////TO DO
         //We need to check our math here.  I'm not sure if getAbsolutePosition() returns the value range we're expecting.
-        return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue() - encoderOffset, 360);
+        return MathUtil.mod(angleEncoder.getAbsolutePosition().refresh().getValue()*360 - encoderOffset, 360);
         //return MathUtil.mod(angleEncoder.getAbsolutePosition().getValue(), 360);
     }
     public double getPositionRad() {
