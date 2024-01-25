@@ -15,9 +15,11 @@ public class ThrottleSubsystem extends SubsystemBase {
     private double intakespeed;
 
     public ThrottleSubsystem(int id, JoystickHandler joy) {
-        motor = new CANSparkMax(id, MotorType.kBrushless);
-        motor2 = new CANSparkMax(14, MotorType.kBrushless);
-        motor3 = new CANSparkMax(16, MotorType.kBrushless);
+        // motor = new CANSparkMax(id, MotorType.kBrushless);
+        // motor2 = new CANSparkMax(14, MotorType.kBrushless);
+        motor2 = new CANSparkMax(30, MotorType.kBrushless);
+        // motor3 = new CANSparkMax(16, MotorType.kBrushless);
+        // motor4 = new CANSparkMax(30, MotorType.kBrushless);
         speed = 01;
         this.joy = joy;
     }
@@ -42,9 +44,9 @@ public class ThrottleSubsystem extends SubsystemBase {
         setIntakeSpeed(-(joy.getAxis5() - 1) / 2);//make sure this is the preffered Joystick axis (check FRC Driver Station)
         //also make sure axis 5 (or whichever you choose) has the same range as axis 6, otherwise you need to adjust the math for intake speed
         
-        motor.set(-speed);
+        // motor.set(-speed);
         motor2.set(speed);        
-        motor3.set(intakespeed); //Negate intakespeed for the opposite direction
+        // motor3.set(intakespeed); //Negate intakespeed for the opposite direction
     }
 
 }
