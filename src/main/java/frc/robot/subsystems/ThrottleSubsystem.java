@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ThrottleSubsystem extends SubsystemBase {
 
-    private CANSparkMax motor, motor2, motor3, motor4;
+    private CANSparkMax motor, motor2, motor3, motor4, motor5;
     double speed;
     JoystickHandler joy;
     private double intakespeed;
@@ -20,6 +20,7 @@ public class ThrottleSubsystem extends SubsystemBase {
         motor2 = new CANSparkMax(14, MotorType.kBrushless);
         motor3 = new CANSparkMax(16, MotorType.kBrushless);
         motor4 = new CANSparkMax(15,MotorType.kBrushless);
+        motor5 = new CANSparkMax(11, MotorType.kBrushless);
         speed = 01;
         this.joy = joy;
     }
@@ -37,7 +38,7 @@ public class ThrottleSubsystem extends SubsystemBase {
             intakespeed = 0;
         }
     }
-//same change needs to be done here
+//Same change mentioned above needs to be done here
     public void setArmSpeed(double armspeed){
         this.armspeed = armspeed;
         if (armspeed > .05){ 
@@ -55,6 +56,7 @@ public class ThrottleSubsystem extends SubsystemBase {
         motor2.set(speed);        
         motor3.set(intakespeed); //Negate intakespeed for the opposite direction
         motor4.set(armspeed);
+        motor5.set(-armspeed);
     }
 
 }
