@@ -87,7 +87,7 @@ public class SwerveWheelModuleSubsystem extends SubsystemBase {
 
         //If wheels are oscillating uncontrollably, maybe negate this?
         //If stuff is shaking change this to +/-
-        double pidOut = -pidController.calculate(currentEncoderValue, angle);
+        double pidOut = pidController.calculate(currentEncoderValue, angle);
 
         angleMotor.set(pidOut);
 
