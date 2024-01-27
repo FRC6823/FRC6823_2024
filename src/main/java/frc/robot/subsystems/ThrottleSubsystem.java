@@ -40,14 +40,14 @@ public class ThrottleSubsystem extends SubsystemBase {
 
 // axis 5 is placeholder and check math later
     public void periodic() {
-        setSpeed((joy.getAxis6() - 1) / 2);
+        setSpeed(-(joy.getAxis6() - 1) / 2);
         setIntakeSpeed(-(joy.getAxis2() - 1) / 2);//make sure this is the preffered Joystick axis (check FRC Driver Station)
         //also make sure axis 5 (or whichever you choose) has the same range as axis 6, otherwise you need to adjust the math for intake speed
         
         // motor.set(-speed);
-        motor2.set(intakespeed);
-        motor3.set(intakespeed);
-        motor4.set(speed);
+        motor2.set(speed);
+        motor3.set(speed);
+        motor4.set(intakespeed);
 
         // motor3.set(intakespeed); //Negate intakespeed for the opposite direction
     }
