@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-//import com.ctre.phoenix.motorcontrol.NeutralMode;
+// import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.JoystickHandler;
 
@@ -9,17 +9,17 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class ThrottleSubsystem extends SubsystemBase {
 
-    private CANSparkMax motor, motor2, motor3;
+    private CANSparkMax motor2, motor3, motor4;
     double speed;
     JoystickHandler joy;
     private double intakespeed;
 
     public ThrottleSubsystem(int id, JoystickHandler joy) {
         // motor = new CANSparkMax(id, MotorType.kBrushless);
-        // motor2 = new CANSparkMax(14, MotorType.kBrushless);
-        motor2 = new CANSparkMax(30, MotorType.kBrushless);
-        // motor3 = new CANSparkMax(16, MotorType.kBrushless);
-        // motor4 = new CANSparkMax(30, MotorType.kBrushless);
+        motor2 = new CANSparkMax(14, MotorType.kBrushless);
+        // motor2 = new CANSparkMax(30, MotorType.kBrushless);
+        motor3 = new CANSparkMax(12, MotorType.kBrushless);
+        motor4 = new CANSparkMax(16, MotorType.kBrushless);
         speed = 01;
         this.joy = joy;
     }
@@ -45,7 +45,10 @@ public class ThrottleSubsystem extends SubsystemBase {
         //also make sure axis 5 (or whichever you choose) has the same range as axis 6, otherwise you need to adjust the math for intake speed
         
         // motor.set(-speed);
-        motor2.set(speed);        
+        motor2.set(speed);
+        motor3.set(speed);
+        motor4.set(speed);
+
         // motor3.set(intakespeed); //Negate intakespeed for the opposite direction
     }
 
