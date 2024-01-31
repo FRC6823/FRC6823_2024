@@ -15,8 +15,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
+  public SwerveDriveSubsystem swerveDrive;
+  public Pigeon2Handler pigeon;
+  private PositionHandler positionHandler;
+
   private double MaxSpeed = 6; // 6 meters per second desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -53,7 +58,19 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  public RobotContainer() {
+  public SwerveDriveSubsystem getSwervedriveSubsystem() {
+    return swerveDrive;
+}
+
+public Pigeon2Handler getPigeon2Handler() {
+    return pigeon;
+}
+
+public PositionHandler getPositionHandler() {
+    return positionHandler;
+}
+
+public RobotContainer() {
     configureBindings();
   }
 
