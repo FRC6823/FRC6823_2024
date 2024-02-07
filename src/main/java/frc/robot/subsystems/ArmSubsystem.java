@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,10 +18,13 @@ public class ArmSubsystem extends SubsystemBase{
     private double setPoint2;
     
     public ArmSubsystem () {
-        motor5 = new CANSparkMax(30, MotorType.kBrushless);
-        motor6 = new CANSparkMax(30, MotorType.kBrushless);
+        motor5 = new CANSparkMax(11, MotorType.kBrushless);
+        motor6 = new CANSparkMax(15, MotorType.kBrushless);
         motor5.restoreFactoryDefaults();
         motor6.restoreFactoryDefaults();
+        motor5.setIdleMode(IdleMode.kBrake);
+        motor6.setIdleMode(IdleMode.kBrake);
+        motor6.setInverted(true);
         pidController = motor5.getPIDController();
         pidController2 = motor6.getPIDController();
 
@@ -78,10 +82,17 @@ public class ArmSubsystem extends SubsystemBase{
         this.setPoint = setPoint;
         this.setPoint2 = setPoint2;
     }
+
+    public void set(double speed){
+        motor5.set(speed);
+    }
+    public void set6(double speed){
+        motor6.set(speed);
+    }
     @Override
     public void periodic()
     {
-        motor5.set(setPoint);
-        motor6.set(setPoint2);
+        /*motor5.set(setPoint);
+        motor6.set(setPoint2);*/
     }
 }
