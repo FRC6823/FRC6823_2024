@@ -43,4 +43,8 @@ public class Const {
         public static final double sSpeedMax = 1;
         public static final double iSpeedMax = 1;
     }
+
+    public class Limelight{
+        
+    }
 }
