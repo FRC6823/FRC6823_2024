@@ -145,5 +145,6 @@ public class LimeLightSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Left TZ", lGet3dTZ());
         SmartDashboard.putNumber("Right RY", rGet3dRY());
         SmartDashboard.putNumber("Left RY", lGet3dRY());
+
     }
 }
