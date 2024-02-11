@@ -7,6 +7,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
 
@@ -30,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase{
         motor6.setInverted(true);
         pidController = motor5.getPIDController();
         pidController2 = motor6.getPIDController();
+
+        encoder = motor6.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
         pidController.setP(Const.Arm.kP);
         pidController.setI(Const.Arm.kI);
@@ -73,5 +76,6 @@ public class ArmSubsystem extends SubsystemBase{
     {
         //motor5.set(setPoint);
         //motor6.set(setPoint2);
+        SmartDashboard.putNumber("Abs Encoder", encoder.getPosition());
     }
 }
