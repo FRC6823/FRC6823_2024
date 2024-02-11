@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
 public class RobotContainer {
@@ -29,6 +30,7 @@ public class RobotContainer {
   
   private ArmSubsystem armSubsystem;
   private SwerveDriveSubsystem drivetrain;
+  private ShintakeSubsystem shintake;
 
   private SwerveRequest.FieldCentric drive;
   private SwerveRequest.SwerveDriveBrake brake;
@@ -42,6 +44,7 @@ public class RobotContainer {
 
     armSubsystem = new ArmSubsystem();
     drivetrain = TunerConstants.DriveTrain;
+    shintake = new ShintakeSubsystem();
 
     drive = new SwerveRequest.FieldCentric()
       .withDeadband(Const.SwerveDrive.MaxSpeed * 0.1).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.1) // Add a 10% deadband
@@ -59,7 +62,7 @@ public class RobotContainer {
         drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
             .withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
     // reset the field-centric heading on left bumper press
@@ -69,9 +72,15 @@ public class RobotContainer {
     joy3.button(9).whileTrue(drivetrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joy3.getRawAxis(1), -joy3.getRawAxis(0)))));//Y is 0 X is 1
 
-    //Arm Commands
-    joy3.button(2).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    //Arm Commands when button is pressed it is true and when it is released it is false 
+    // - is rasing the arm
+    joy3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     joy3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set6(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set6(0)));
+
+    //Shintake Commands
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));
+    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.05))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
 
     if (Utils.isSimulation()) {

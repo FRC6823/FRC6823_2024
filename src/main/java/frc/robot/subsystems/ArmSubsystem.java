@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -14,6 +16,7 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax motor5, motor6;
     private SparkPIDController pidController;
     private SparkPIDController pidController2;
+    private SparkAbsoluteEncoder encoder;
     private double setPoint;
     private double setPoint2;
     
@@ -68,7 +71,7 @@ public class ArmSubsystem extends SubsystemBase{
     @Override
     public void periodic()
     {
-        motor5.set(setPoint);
-        motor6.set(setPoint2);
+        //motor5.set(setPoint);
+        //motor6.set(setPoint2);
     }
 }

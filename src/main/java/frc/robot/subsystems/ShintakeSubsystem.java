@@ -14,7 +14,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
 
-    public ShintakeSubsystem(int id) {
+    public ShintakeSubsystem() {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
