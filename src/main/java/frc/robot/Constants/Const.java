@@ -1,4 +1,6 @@
 package frc.robot.Constants;
+import edu.wpi.first.apriltag.AprilTagPoseEstimator;
+import edu.wpi.first.math.estimator.PoseEstimator;
 
 public class Const {
     
@@ -42,5 +44,9 @@ public class Const {
         public static final double iSpeedDeadband = 0.05;
         public static final double sSpeedMax = 1;
         public static final double iSpeedMax = 1;
+    }
+
+    public class Limelight{
+        
     }
 }
