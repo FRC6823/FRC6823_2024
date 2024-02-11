@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +19,8 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
+        botMotor.setIdleMode(IdleMode.kCoast);
+        topMotor.setIdleMode(IdleMode.kCoast);
     }
 
     public void setShootSpeed(double speed) {

@@ -74,13 +74,13 @@ public class RobotContainer {
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
-    joy3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    joy3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set6(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set6(0)));
+    joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set6(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set6(0)));
 
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
-    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.05))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
 
     if (Utils.isSimulation()) {
