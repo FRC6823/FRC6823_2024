@@ -73,9 +73,10 @@ public class RobotContainer {
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joy3.getRawAxis(1), -joy3.getRawAxis(0)))));//Y is 0 X is 1
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
-    // - is rasing the arm
+    // - is raising the arm
     joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
 
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));

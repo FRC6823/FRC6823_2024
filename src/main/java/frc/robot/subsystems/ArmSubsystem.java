@@ -60,17 +60,16 @@ public class ArmSubsystem extends SubsystemBase{
         pidController2.setSmartMotionAllowedClosedLoopError(Const.Arm.allowedErr2, smartMotionSlot2);
     }
 
-    public void setSetPoint(double setPoint, double setPoint2)
+    public void goToAngle(double setPoint, double setPoint2)
     {
         this.setPoint = setPoint;
-        this.setPoint2 = setPoint2;
+        motor5.set(setPoint);
+        motor6.set(setPoint2);
     }
 
     public void set(double speed){
-        if (speed < 0) {
-            motor5.set(speed);
-            motor6.set(speed);
-        }
+            motor5.set((speed + 1) /2);
+            motor6.set((speed + 1) /2);
     }
     @Override
     public void periodic()
