@@ -67,10 +67,10 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void set(double speed){
-        motor5.set(speed);
-    }
-    public void set6(double speed){
-        motor6.set(speed);
+        if (speed < 0) {
+            motor5.set(speed);
+            motor6.set(speed);
+        }
     }
     @Override
     public void periodic()
