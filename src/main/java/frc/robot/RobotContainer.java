@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,6 +19,7 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
+import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.ThrottleSubsystem;
 
@@ -33,7 +34,7 @@ public class RobotContainer {
     public GripperAngleSubsystem gripperAngle;
     public LEDSubsystem LEDs;
     public ThrottleSubsystem motor1;
-    // public BetterShooter shooter;
+    public ShintakeSubsystem shintake;
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     //private RobotSpaceDrive robotSpaceDriveCommand;
@@ -88,7 +89,7 @@ public class RobotContainer {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         limeLight = new LimeLightSubsystem();
         swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
-        // shooter = new BetterShooter();
+        shintake = new ShintakeSubsystem();
         // pneumatics = new PneumaticSubsystem();
         // lift = new LiftSubsystem();
         // pulley = new PulleySubsystem();
@@ -119,7 +120,7 @@ public class RobotContainer {
         autoChooser.addOption("Score, Backup, Start Pose", 5);
         autoChooser.addOption("Score, Start Pose", 6);
         autoChooser.addOption("Score, Over, Balance", 7);
-        autoChooser.addOption("Path Planner", 8);
+        autoChooser.addOption("Path Plannr", 8);
 
         Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);
 
@@ -274,5 +275,12 @@ public class RobotContainer {
         joy4.povDown().whileTrue(new InstantCommand(() -> {
             positionHandler.decreaseIndex();
         })).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
+
     }
+       /* public void periodic() {
+            SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
+            SmartDashboard.updateValues();
+        }
+        */
+
 }
