@@ -19,7 +19,6 @@ import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
-import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.ThrottleSubsystem;
 
@@ -34,7 +33,7 @@ public class RobotContainer {
     public GripperAngleSubsystem gripperAngle;
     public LEDSubsystem LEDs;
     public ThrottleSubsystem motor1;
-    public ShintakeSubsystem shintake;
+
 
     private FieldSpaceDrive fieldSpaceDriveCommand;
     //private RobotSpaceDrive robotSpaceDriveCommand;
@@ -89,7 +88,6 @@ public class RobotContainer {
         pigeon = new Pigeon2Handler(); // pigeon2 input
         limeLight = new LimeLightSubsystem();
         swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
-        shintake = new ShintakeSubsystem();
         // pneumatics = new PneumaticSubsystem();
         // lift = new LiftSubsystem();
         // pulley = new PulleySubsystem();

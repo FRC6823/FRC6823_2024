@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.JoystickHandler;
@@ -13,6 +17,7 @@ public class ThrottleSubsystem extends SubsystemBase {
     double speed;
     JoystickHandler joy;
     private double intakespeed;
+    private DigitalInput inputBeamBreak;
 
     public ThrottleSubsystem(int id, JoystickHandler joy) {
         // motor = new CANSparkMax(id, MotorType.kBrushless);
@@ -20,6 +25,7 @@ public class ThrottleSubsystem extends SubsystemBase {
         // motor2 = new CANSparkMax(30, MotorType.kBrushless);
         motor3 = new CANSparkMax(12, MotorType.kBrushless);
         motor4 = new CANSparkMax(16, MotorType.kBrushless);
+        inputBeamBreak = new DigitalInput(0);
         speed = 01;
         this.joy = joy;
     }
@@ -50,6 +56,8 @@ public class ThrottleSubsystem extends SubsystemBase {
         motor4.set(intakespeed);
 
         // motor3.set(intakespeed); //Negate intakespeed for the opposite direction
-    }
 
+        //Shuffleboard.getTab("SmartDashboard").add("BeamBreak", inputBeamBreak.get());
+        SmartDashboard.putBoolean("BeamBREAK", inputBeamBreak.get());
+    }
 }
