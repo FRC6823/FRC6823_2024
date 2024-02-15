@@ -59,9 +59,11 @@ public class RobotContainer {
 
  private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
+        //drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
+            //.withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
+            .withVelocityY(-joy3.getRawAxis(0) * (joy3.getRawAxis(2) * 6))
             .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
