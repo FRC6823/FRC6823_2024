@@ -68,8 +68,8 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void set(double speed){
-            motor5.set((speed + 1) /2);
-            motor6.set((speed + 1) /2);
+            motor5.set(speed);
+            motor6.set(speed);
     }
     public double getEncoderPosition() {
         return encoder.getPosition();
@@ -78,6 +78,8 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic()
     {
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
+        // SmartDashboard.putNumber("Speed", ((speed + 1) /2));
+
         //motor5.set(setPoint);
         //motor6.set(setPoint2);
     }
