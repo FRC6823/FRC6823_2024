@@ -59,9 +59,11 @@ public class RobotContainer {
 
  private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
+        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
+        //drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
-            .withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
+            //.withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
+            .withVelocityY(-joy3.getRawAxis(0) * (joy3.getRawAxis(2) * 6))
             .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
@@ -73,11 +75,10 @@ public class RobotContainer {
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joy3.getRawAxis(1), -joy3.getRawAxis(0)))));//Y is 0 X is 1
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
-    // - is raising the arm
+    // - is rasing the arm
     joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
-
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
