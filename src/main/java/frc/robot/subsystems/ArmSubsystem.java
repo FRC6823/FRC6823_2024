@@ -7,6 +7,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +22,7 @@ public class ArmSubsystem extends SubsystemBase{
     private SparkAbsoluteEncoder encoder;
     private double setPoint;
     private double setPoint2;
+    private DigitalInput limitSwitch = new DigitalInput(1);
     
     public ArmSubsystem () {
         motor5 = new CANSparkMax(11, MotorType.kBrushless);
@@ -68,15 +70,22 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void set(double speed){
-            motor5.set(speed);
-            motor6.set(speed);
+        if (speed > 0) {
+            if (limitSwitch.get()) {
+                motor5.set(0);
+                motor6.set(0);
+            } else {
+                motor5.set(speed);
+                motor6.set(speed);
+            }
+        }
+
     }
     public double getEncoderPosition() {
         return encoder.getPosition();
     }
     @Override
-    public void periodic()
-    {
+    public void periodic() {
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
         // SmartDashboard.putNumber("Speed", ((speed + 1) /2));
 
