@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
+import java.util.concurrent.CancellationException;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkLimitSwitch;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,14 +22,29 @@ public class ArmSubsystem extends SubsystemBase{
     private SparkPIDController pidController;
     private SparkPIDController pidController2;
     private SparkAbsoluteEncoder encoder;
+    private SparkLimitSwitch fwd_LimitSwitch5, fwd_LimitSwitch6;
+    private SparkLimitSwitch rev_LimitSwitch5, rev_LimitSwitch6;
     private double setPoint;
     private double setPoint2;
     
     public ArmSubsystem () {
         motor5 = new CANSparkMax(11, MotorType.kBrushless);
         motor6 = new CANSparkMax(15, MotorType.kBrushless);
+
+        /* Make sure you are configuring the Sparks in CODE not in the firmaware */
         motor5.restoreFactoryDefaults();
         motor6.restoreFactoryDefaults();
+
+        fwd_LimitSwitch5 = motor5.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch5 = motor5.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch5.enableLimitSwitch(false);
+        rev_LimitSwitch5.enableLimitSwitch(true);
+
+        fwd_LimitSwitch6 = motor6.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch6 = motor6.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch6.enableLimitSwitch(false);
+        rev_LimitSwitch6.enableLimitSwitch(true);
+        
         motor5.setIdleMode(IdleMode.kBrake);
         motor6.setIdleMode(IdleMode.kBrake);
         motor6.setInverted(true);
@@ -34,6 +52,8 @@ public class ArmSubsystem extends SubsystemBase{
         pidController2 = motor6.getPIDController();
 
         encoder = motor6.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+
+
 
         pidController.setP(Const.Arm.kP);
         pidController.setI(Const.Arm.kI);
