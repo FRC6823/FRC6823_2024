@@ -27,8 +27,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
         inputBeamBreak = new DigitalInput(0);
-        botMotor.setIdleMode(IdleMode.kCoast);
+        topMotor.restoreFactoryDefaults();
+        botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
+        botMotor.setIdleMode(IdleMode.kCoast);
+        topMotor.burnFlash();
+        botMotor.burnFlash();
     }
 
     public void setShootSpeed(double speed) {

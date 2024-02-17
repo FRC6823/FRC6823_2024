@@ -23,6 +23,7 @@ public class ArmSubsystem extends SubsystemBase{
     private SparkLimitSwitch rev_LimitSwitch5, rev_LimitSwitch6;
     private double setPoint;
     private double setPoint2;
+    private double armSpeed;
     
     public ArmSubsystem () {
         

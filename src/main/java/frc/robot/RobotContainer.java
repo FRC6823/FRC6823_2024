@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -81,7 +82,7 @@ public class RobotContainer {
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));
-    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new TimedShintake(shintake, -0.1, 0.1, false));
     joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
 
