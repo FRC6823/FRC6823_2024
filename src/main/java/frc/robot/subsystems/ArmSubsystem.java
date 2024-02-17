@@ -22,6 +22,7 @@ public class ArmSubsystem extends SubsystemBase{
     private SparkLimitSwitch rev_LimitSwitch5, rev_LimitSwitch6;
     private double setPoint;
     private double setPoint2;
+    private double armSpeed;
     
     public ArmSubsystem () {
         
@@ -76,6 +77,9 @@ public class ArmSubsystem extends SubsystemBase{
 
         pidController = motor5.getPIDController();
         pidController2 = motor6.getPIDController();
+        armSpeed = 0;
+        setPoint = 0;
+        setPoint2 = 0;
 
         encoder = motor6.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
@@ -106,15 +110,22 @@ public class ArmSubsystem extends SubsystemBase{
         pidController2.setSmartMotionAllowedClosedLoopError(Const.Arm.allowedErr2, smartMotionSlot2);
     }
 
-    public void goToAngle(double setPoint, double setPoint2){
+    public void goToAngle(double setPoint){
         this.setPoint = setPoint;
-        motor5.set(setPoint);
-        motor6.set(setPoint2);
+        //motor5.set(setPoint);
+        //motor6.set(setPoint2);
+        pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
     public void set(double speed){
-            motor5.set(speed);
-            motor6.set(speed);
+        /*
+         * This limits the totla speed rate.  Should NOT do it this way!
+         * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
+         */
+        armSpeed = speed * .2;
+        SmartDashboard.putNumber("Arm Speed", speed);
+        motor5.set(speed);
+            //motor6.set(speed);
     }
     
     public double getEncoderPosition() {
@@ -129,7 +140,7 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putBoolean("Forward Limit Status", fwd_LimitSwitch5.isPressed() && fwd_LimitSwitch6.isPressed());
         SmartDashboard.putBoolean("Reverse Limit Status", rev_LimitSwitch5.isPressed() && rev_LimitSwitch6.isPressed());
         
-        // SmartDashboard.putNumber("Speed", ((speed + 1) /2));
+        // SmartDashboard.putNumber("Speed", speed);
 
         //motor5.set(setPoint);
         //motor6.set(setPoint2);

@@ -1,6 +1,4 @@
 package frc.robot.Constants;
-import edu.wpi.first.apriltag.AprilTagPoseEstimator;
-import edu.wpi.first.math.estimator.PoseEstimator;
 
 public class Const {
     
@@ -73,9 +71,25 @@ public class Const {
 
     public class Shintake{
         //all variables start with i for intake or s for shooter
+		
+        /*
+         * Shooter
+         */
+        public static final double skP = 0;
+		public static final double skI = 0;
+		public static final double skD = 0;
+		public static final double skIz = 0;
+		public static final double skFF = 0;
+		public static final double skMinOutput = 0;
+		public static final double skMaxOutput = 0;
+        
         public static final double sSpeedDeadband = 0.05;
-        public static final double iSpeedDeadband = 0.05;
         public static final double sSpeedMax = 1;
+
+        /*
+         * Intake
+         */
+        public static final double iSpeedDeadband = 0.05;
         public static final double iSpeedMax = 1;
     }
 
