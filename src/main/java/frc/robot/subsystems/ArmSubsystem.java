@@ -31,7 +31,7 @@ public class ArmSubsystem extends SubsystemBase{
         motor5 = new CANSparkMax(11, MotorType.kBrushless);
         motor6 = new CANSparkMax(15, MotorType.kBrushless);
 
-        /* Make sure you are configuring the Sparks in CODE not in the firmaware */
+        /* Make sure you are configuring the Sparks in CODE not in the firmaware so that if you have to replace a Spark quickly, you don't have to fight with any config except the CAN ID */
         motor5.restoreFactoryDefaults();
         motor6.restoreFactoryDefaults();
 
@@ -48,6 +48,11 @@ public class ArmSubsystem extends SubsystemBase{
         motor5.setIdleMode(IdleMode.kBrake);
         motor6.setIdleMode(IdleMode.kBrake);
         motor6.setInverted(true);
+
+        //  Write the config to flash memory on the Spark Max so that the settings can survive a brownout/power outage.
+        motor5.burnFlash();
+        motor6.burnFlash();
+
         pidController = motor5.getPIDController();
         pidController2 = motor6.getPIDController();
 
@@ -80,8 +85,7 @@ public class ArmSubsystem extends SubsystemBase{
         pidController2.setSmartMotionAllowedClosedLoopError(Const.Arm.allowedErr2, smartMotionSlot2);
     }
 
-    public void goToAngle(double setPoint, double setPoint2)
-    {
+    public void goToAngle(double setPoint, double setPoint2){
         this.setPoint = setPoint;
         motor5.set(setPoint);
         motor6.set(setPoint2);
@@ -95,9 +99,10 @@ public class ArmSubsystem extends SubsystemBase{
         return encoder.getPosition();
     }
     @Override
-    public void periodic()
-    {
+    public void periodic(){
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
+        SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch5.isLimitSwitchEnabled() && fwd_LimitSwitch6.isLimitSwitchEnabled() );
+        SmartDashboard.putBoolean("Rev 5 & 6 Limit Enabled", rev_LimitSwitch5.isLimitSwitchEnabled() && rev_LimitSwitch6.isLimitSwitchEnabled() );
         // SmartDashboard.putNumber("Speed", ((speed + 1) /2));
 
         //motor5.set(setPoint);
