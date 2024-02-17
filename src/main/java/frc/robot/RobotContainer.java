@@ -76,7 +76,7 @@ public class RobotContainer {
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
-    joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy0.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-joy0.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
