@@ -123,8 +123,7 @@ public class ArmSubsystem extends SubsystemBase{
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
         armSpeed = speed * .2;
-        SmartDashboard.putNumber("Arm Speed", speed);
-        motor5.set(speed);
+        motor5.set(armSpeed);
             //motor6.set(speed);
     }
     
@@ -134,6 +133,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
+        SmartDashboard.putNumber("Arm Speed", armSpeed);
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
         SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch5.isLimitSwitchEnabled() && fwd_LimitSwitch6.isLimitSwitchEnabled() );
         SmartDashboard.putBoolean("Rev 5 & 6 Limit Enabled", rev_LimitSwitch5.isLimitSwitchEnabled() && rev_LimitSwitch6.isLimitSwitchEnabled() );
