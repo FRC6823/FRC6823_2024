@@ -32,11 +32,11 @@ public class TimedShintake extends Command{
         }
     }
 
-
-
     public boolean isFinished(){
-        shintake.setIntakeSpeed(0);
-        shintake.setShootSpeed(0);
+        if (timer.hasElapsed(time)){
+            shintake.setIntakeSpeed(0);
+            shintake.stopShooter();
+        }
         return timer.hasElapsed(time);
     }
 

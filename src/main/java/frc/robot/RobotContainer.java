@@ -26,7 +26,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 public class RobotContainer {
 
   private CommandJoystick joy3;
-  private CommandXboxController joy0;
+  private CommandXboxController joy4;
 
   
   private ArmSubsystem armSubsystem;
@@ -38,9 +38,11 @@ public class RobotContainer {
   private SwerveRequest.PointWheelsAt point;
   private Telemetry logger;
 
+  private TimedShintake controlledReverse;
+
 
   public RobotContainer() {
-    joy0 = new CommandXboxController(0);
+    joy4 = new CommandXboxController(4);
     joy3 = new CommandJoystick(3);
 
     armSubsystem = new ArmSubsystem();
@@ -53,6 +55,8 @@ public class RobotContainer {
     brake = new SwerveRequest.SwerveDriveBrake();
     point = new SwerveRequest.PointWheelsAt();
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
+
+    controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
     configureBindings();
   }
@@ -77,12 +81,12 @@ public class RobotContainer {
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
-    joy0.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-joy0.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-joy4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
-    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.setShootSpeed(0)));
-    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new TimedShintake(shintake, -0.1, 0.1, false));
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
 
