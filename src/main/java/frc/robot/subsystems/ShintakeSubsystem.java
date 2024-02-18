@@ -31,7 +31,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.restoreFactoryDefaults();
         intakeMotor.restoreFactoryDefaults();
         
-        botMotor.follow(topMotor, true);  // !!! Check if we need to invert this?
+        botMotor.follow(topMotor, false);  // !!! Check if we need to invert this?
         
         topMotor.setIdleMode(IdleMode.kCoast);
         botMotor.setIdleMode(IdleMode.kCoast);
@@ -56,27 +56,33 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.speed = speed;
         MathUtil.applyDeadband(speed, Const.Shintake.sSpeedDeadband, Const.Shintake.sSpeedMax);
     }
- 
+
     public void setIntakeSpeed(double intakespeed) {
         this.intakespeed = intakespeed;
-        MathUtil.applyDeadband(speed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
+        MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
     }
 
+/* 
     public boolean getinputBeamBreak() { //not currently used
         //return if beam is broken
         return inputBeamBreak.get();
     }
+*/
 
     public void periodic() {
         topMotor.set(speed);
         //botMotor.set(speed);
         
         SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
-           if (inputBeamBreak.get()) {
+           /*
+            if (inputBeamBreak.get()) {
                 intakeMotor.set(0);   
             } else {
                 intakeMotor.set(intakespeed); 
             }
+            */
+            intakeMotor.set(intakespeed); 
+            
     }
 
 }

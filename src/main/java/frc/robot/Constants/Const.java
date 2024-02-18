@@ -34,34 +34,40 @@ public class Const {
     
     }    
     public class Arm{
-        //Spark Configs
         
+        // Arm angles
+        public static final double UP_ANGLE = 0.58926248550415;
+        public static final double DOWN_ANGLE = 0.376505047082901;
+
         // PID coefficients
-        public static final double kP = 5e-5;
-        public static final double kP2 = 5e-5;
-        public static final double kI2 = 1e-6; 
-        public static final double kI = 1e-6;
-        public static final double kD2 = 0;
+        // public static final double kP = 5e-5;
+        public static final double kP = 0;
+        // public static final double kI = 1e-6;
+        public static final double kI = 0;
         public static final double kD = 0; 
-        public static final double kIz2 = 0;
         public static final double kIz = 0;
-        public static final double kFF2 = 0.000156; 
         public static final double kFF = 0.000156; 
-        public static final double kMaxOutput = 1; 
-        public static final double kMaxOutput2 = 1;
-        public static final double kMinOutput = -1;
-        public static final double kMinOutput2 = -1;
-        public static final double maxRPM2 = 5676;
+        public static final double kMaxOutput = .01; 
+        public static final double kMinOutput = -.01;
         public static final double maxRPM = 5676;
-        
-        public static final double maxVel2 = 2000;
         public static final double maxVel = 2000;
-        public static final double maxAcc2 = 1500;
         public static final double maxAcc = 1500;
-        public static final double minVel2 = 0;
         public static final double minVel = 0;
-        public static final double allowedErr2 = 0;
         public static final double allowedErr = 0;
+
+        // public static final double kP2 = 5e-5;
+        // public static final double kI2 = 1e-6; 
+        // public static final double kD2 = 0;
+        // public static final double kIz2 = 0;
+        // public static final double kFF2 = 0.000156; 
+        // public static final double kMaxOutput2 = 1;
+        // public static final double kMinOutput2 = -1;
+        // public static final double maxRPM2 = 5676;
+        
+        // public static final double maxVel2 = 2000;
+        // public static final double maxAcc2 = 1500;
+        // public static final double minVel2 = 0;
+        // public static final double allowedErr2 = 0;
     }
 
     public class SwerveDrive{
