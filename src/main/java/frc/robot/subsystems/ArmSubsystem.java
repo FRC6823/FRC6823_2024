@@ -118,6 +118,20 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void set(double speed){
+        /*if (speed > 0) {
+            if (getEncoderPosition() >= 0.9 && speed > 0) {
+                motor5.set(0);
+                motor6.set(0);
+            }
+            if (limitSwitch.get()) {
+                motor5.set(0);
+                motor6.set(0);
+            } else {
+                motor5.set(speed);
+                motor6.set(speed);
+            }
+        }*/
+
         /*
          * This limits the totla speed rate.  Should NOT do it this way!
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
