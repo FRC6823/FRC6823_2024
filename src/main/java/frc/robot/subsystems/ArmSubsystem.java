@@ -71,6 +71,10 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void set(double speed){
         if (speed > 0) {
+            if (getEncoderPosition() >= 0.9 || speed > 0) {
+                motor5.set(0);
+                motor6.set(0);
+            }
             if (limitSwitch.get()) {
                 motor5.set(0);
                 motor6.set(0);
