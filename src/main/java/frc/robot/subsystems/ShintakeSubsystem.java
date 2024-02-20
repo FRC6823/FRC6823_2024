@@ -18,7 +18,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
-    //private DigitalInput inputBeamBreak;
+    private DigitalInput inputBeamBreak;
     //private DigitalInput shooterBeamBreak;
 
     public ShintakeSubsystem() {
@@ -26,7 +26,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
-        //inputBeamBreak = new DigitalInput(0);
+        inputBeamBreak = new DigitalInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -60,13 +60,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.set(speed);
         botMotor.set(speed);
         
-       /*  SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
+       SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
            if (inputBeamBreak.get()) {
-                //intakeMotor.set(0);   
+                intakeMotor.set(0);   
             } else {
                 intakeMotor.set(intakespeed); 
-            } */
-        intakeMotor.set(intakespeed);
+            } 
     }
 
 }
