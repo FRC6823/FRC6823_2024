@@ -7,6 +7,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
@@ -18,15 +20,20 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
-    private DigitalInput inputBeamBreak;
+    //private DigitalInput inputBeamBreak;
     //private DigitalInput shooterBeamBreak;
+    //private AnalogTrigger inputBeamBreak;
+    private AnalogInput inputBeamBreak;
+
 
     public ShintakeSubsystem() {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
-        inputBeamBreak = new DigitalInput(0);
+        //inputBeamBreak = new DigitalInput(0);
+        //inputBeamBreak = new AnalogTrigger(0);
+        inputBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -60,12 +67,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.set(speed);
         botMotor.set(speed);
         
-       SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
-           if (inputBeamBreak.get()) {
+       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
+           /*if (inputBeamBreak.getValue()) {
                 intakeMotor.set(0);   
             } else {
                 intakeMotor.set(intakespeed); 
-            } 
+            }  */
     }
 
 }
