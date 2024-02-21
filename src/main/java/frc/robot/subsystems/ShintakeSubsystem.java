@@ -6,9 +6,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.AnalogTriggerOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
@@ -20,10 +20,9 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
-    //private DigitalInput inputBeamBreak;
-    //private DigitalInput shooterBeamBreak;
-    //private AnalogTrigger inputBeamBreak;
-    private AnalogInput inputBeamBreak;
+    private AnalogTrigger inputBeamBreak;
+    private AnalogTriggerOutput beamSignal1;
+    private AnalogInput rawBeamBreak;
 
 
     public ShintakeSubsystem() {
@@ -31,9 +30,10 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
-        //inputBeamBreak = new DigitalInput(0);
-        //inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak = new AnalogInput(0);
+        inputBeamBreak = new AnalogTrigger(0);
+        inputBeamBreak.setLimitsRaw(1000, 3000); //placeholder, also doesn't actually work figure this out later
+        beamSignal1 = inputBeamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+        rawBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -67,12 +67,13 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.set(speed);
         botMotor.set(speed);
         
-       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
-           /*if (inputBeamBreak.getValue()) {
+       SmartDashboard.putNumber("BeamBreak", rawBeamBreak.getValue());
+
+        if (beamSignal1.get()) {
                 intakeMotor.set(0);   
-            } else {
+        } else {
                 intakeMotor.set(intakespeed); 
-            }  */
+            }  
     }
 
 }
