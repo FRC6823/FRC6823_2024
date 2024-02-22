@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Commands.FieldCentricCommand;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
@@ -30,9 +32,10 @@ public class RobotContainer {
 
   
   private ArmSubsystem armSubsystem;
-  private SwerveDriveSubsystem drivetrain;
+  private SwerveDriveSubsystem swerve;
   private ShintakeSubsystem shintake;
 
+  private FieldCentricCommand fieldCentric;
   private SwerveRequest.FieldCentric drive;
   private SwerveRequest.SwerveDriveBrake brake;
   private SwerveRequest.PointWheelsAt point;
@@ -46,7 +49,7 @@ public class RobotContainer {
     joy3 = new CommandJoystick(3);
 
     armSubsystem = new ArmSubsystem();
-    drivetrain = TunerConstants.DriveTrain;
+    swerve = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
 
     drive = new SwerveRequest.FieldCentric()
@@ -58,25 +61,29 @@ public class RobotContainer {
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
+    fieldCentric = new FieldCentricCommand(swerve, joy3);
+
     configureBindings();
   }
   
 
  private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    /*drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
         drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
         //drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
             //.withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
             .withVelocityY(-joy3.getRawAxis(0) * (joy3.getRawAxis(2) * 6))
             .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+        ));*/
+    
+    swerve.setDefaultCommand(fieldCentric);
 
     // reset the field-centric heading on left bumper press
-    joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    joy3.button(3).onTrue(swerve.runOnce(() -> swerve.seedFieldRelative()));
 
-    joy3.button(8).whileTrue(drivetrain.applyRequest(() -> brake));
-    joy3.button(9).whileTrue(drivetrain
+    joy3.button(8).whileTrue(swerve.applyRequest(() -> brake));
+    joy3.button(9).whileTrue(swerve
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joy3.getRawAxis(1), -joy3.getRawAxis(0)))));//Y is 0 X is 1
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
@@ -91,9 +98,9 @@ public class RobotContainer {
 
 
     if (Utils.isSimulation()) {
-      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+      swerve.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
+    swerve.registerTelemetry(logger::telemeterize);
   }
 
   public Command getAutonomousCommand() {
