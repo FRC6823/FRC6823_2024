@@ -31,7 +31,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
         inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak.setLimitsRaw(1000, 3000); //placeholder, also doesn't actually work figure this out later
+        inputBeamBreak.setLimitsDutyCycle(1000, 3000); //placeholder, also doesn't actually work figure this out later
         beamSignal1 = inputBeamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
         rawBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
