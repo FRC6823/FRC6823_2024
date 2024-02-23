@@ -20,20 +20,41 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
-    private AnalogTrigger inputBeamBreak;
+    private AnalogTrigger inputBeamBreak0;
+    private AnalogTrigger inputBeamBreak1;
+    private AnalogTrigger inputBeamBreak2;
+    private AnalogInput rawBeamBreak0;
+    private AnalogInput rawBeamBreak1;
+    private AnalogInput rawBeamBreak2;
+    private AnalogTriggerOutput beamSignal0;
     private AnalogTriggerOutput beamSignal1;
-    private AnalogInput rawBeamBreak;
-
+    private AnalogTriggerOutput beamSignal2;
+   
 
     public ShintakeSubsystem() {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
-        inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak.setLimitsDutyCycle(1000, 3000); //placeholder, also doesn't actually work figure this out later
-        beamSignal1 = inputBeamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
-        rawBeamBreak = new AnalogInput(0);
+
+        inputBeamBreak0 = new AnalogTrigger(0);
+        inputBeamBreak0.setLimitsRaw(600, 800);
+        beamSignal0 = inputBeamBreak0.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+
+        inputBeamBreak1 = new AnalogTrigger(1);
+        inputBeamBreak1.setLimitsRaw(600, 800); //placeholder
+        beamSignal1 = inputBeamBreak1.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+
+        inputBeamBreak2 = new AnalogTrigger(2);
+        inputBeamBreak2.setLimitsRaw(600, 800); //placeholder
+        beamSignal2 = inputBeamBreak2.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+
+        //for smartdashboard but doesn't work in tandem with AnalogTrigger
+        /*rawBeamBreak0 = new AnalogInput(0); 
+        rawBeamBreak1 = new AnalogInput(1); 
+        rawBeamBreak2 = new AnalogInput(2); */
+
+
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -67,9 +88,15 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.set(speed);
         botMotor.set(speed);
         
-       SmartDashboard.putNumber("BeamBreak", rawBeamBreak.getValue());
+       /*SmartDashboard.putNumber("rawBeamBreak0", rawBeamBreak0.getValue());
+       SmartDashboard.putNumber("rawBeamBreak1", rawBeamBreak1.getValue());
+       SmartDashboard.putNumber("rawBeamBreak2", rawBeamBreak2.getValue());*/
+       SmartDashboard.putBoolean("BeamSignal0", beamSignal0.get());
+       SmartDashboard.putBoolean("BeamSignal1", beamSignal1.get());
+       SmartDashboard.putBoolean("BeamSignal2", beamSignal2.get());
 
-        if (beamSignal1.get()) {
+
+        if (!beamSignal0.get()) {
                 intakeMotor.set(0);   
         } else {
                 intakeMotor.set(intakespeed); 
