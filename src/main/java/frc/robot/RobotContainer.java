@@ -53,7 +53,7 @@ public class RobotContainer {
     shintake = new ShintakeSubsystem();
 
     drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Const.SwerveDrive.MaxSpeed * 0.001).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.001) // Add a .1% deadband
+      .withDeadband(Const.SwerveDrive.MaxSpeed * 0.01).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.01) // Add a 1% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     brake = new SwerveRequest.SwerveDriveBrake();
     point = new SwerveRequest.PointWheelsAt();
@@ -64,6 +64,7 @@ public class RobotContainer {
     drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     
     configureBindings();
+    drivetrain.kevin();
   }
   
 
@@ -101,8 +102,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+        
 
       // Create a path following command using AutoBuilder. This will also trigger event markers.
-      return new PathPlannerAuto("Example Path");
+      return AutoBuilder.followPath(path);
     }
 }

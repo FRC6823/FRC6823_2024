@@ -36,25 +36,22 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private double m_lastSimTime;
     private Telemetry telemetry;
     private CommandJoystick joy3;
-    private AutoBuilder autoBuilder;
 
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        kevin();
     }
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        kevin();
     }
 
     public boolean kevin(){  
-        autoBuilder.configureHolonomic(
+        AutoBuilder.configureHolonomic(
             this::getPose, 
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getCurrSpeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
