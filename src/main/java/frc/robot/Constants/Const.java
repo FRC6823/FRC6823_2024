@@ -41,7 +41,7 @@ public class Const {
     public class Shintake{
         //all variables start with i for intake or s for shooter
         public static final double sSpeedDeadband = 0.05;
-        public static final double iSpeedDeadband = 0.05;
+        public static final double iSpeedDeadband = 0.0;
         public static final double sSpeedMax = 1;
         public static final double iSpeedMax = 1;
     }

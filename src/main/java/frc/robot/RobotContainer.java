@@ -61,23 +61,23 @@ public class RobotContainer {
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
-    fieldCentric = new FieldCentricCommand(swerve, joy3);
+    //fieldCentric = new FieldCentricCommand(swerve, joy3);
 
     configureBindings();
   }
   
 
  private void configureBindings() {
-    /*drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
+    swerve.setDefaultCommand( // Drivetrain will execute this command periodically
+        swerve.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
         //drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
                                                                                            // negative Y (forward)
             //.withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
             .withVelocityY(-joy3.getRawAxis(0) * (joy3.getRawAxis(2) * 6))
             .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));*/
+        ));
     
-    swerve.setDefaultCommand(fieldCentric);
+    //swerve.setDefaultCommand(fieldCentric);
 
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(swerve.runOnce(() -> swerve.seedFieldRelative()));
@@ -94,7 +94,7 @@ public class RobotContainer {
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
-    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
 
     if (Utils.isSimulation()) {

@@ -29,11 +29,11 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
-        joy3 = new CommandJoystick(3);
-        inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak.setLimitsDutyCycle(1000, 3000); //placeholder, also doesn't actually work figure this out later
-        beamSignal1 = inputBeamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
-        rawBeamBreak = new AnalogInput(0);
+        //joy3 = new CommandJoystick(3);
+        //inputBeamBreak = new AnalogTrigger(0);
+        //inputBeamBreak.setLimitsDutyCycle(1000, 3000); //placeholder, also doesn't actually work figure this out later
+        //beamSignal1 = inputBeamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+        //rawBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -54,8 +54,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     }
  
     public void setIntakeSpeed(double intakespeed) {
-        MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
-        this.intakespeed = intakespeed;
+        this.intakespeed = MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
     }
 
     /*public boolean getinputBeamBreak() { //not currently used
@@ -67,13 +66,13 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.set(speed);
         botMotor.set(speed);
         
-       SmartDashboard.putNumber("BeamBreak", rawBeamBreak.getValue());
+       //SmartDashboard.putNumber("BeamBreak", rawBeamBreak.getValue());
 
-        if (beamSignal1.get()) {
+        /*if (beamSignal1.get()) {
                 intakeMotor.set(0);   
         } else {
                 intakeMotor.set(intakespeed); 
-            }  
+            }  */
     }
 
 }
