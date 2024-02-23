@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
@@ -52,7 +53,7 @@ public class RobotContainer {
     shintake = new ShintakeSubsystem();
 
     drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Const.SwerveDrive.MaxSpeed * 0.1).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDeadband(Const.SwerveDrive.MaxSpeed * 0.001).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.001) // Add a .1% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     brake = new SwerveRequest.SwerveDriveBrake();
     point = new SwerveRequest.PointWheelsAt();
@@ -60,18 +61,17 @@ public class RobotContainer {
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
+    drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
+    
     configureBindings();
   }
   
 
  private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (joy3.getRawAxis(2) * 6)))
-        //drive.withVelocityX((-joy3.getRawAxis(1)) * Const.SwerveDrive.MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            //.withVelocityY(-joy3.getRawAxis(0) * Const.SwerveDrive.MaxSpeed) // Drive left with negative X (left)
-            .withVelocityY(-joy3.getRawAxis(0) * (joy3.getRawAxis(2) * 6))
-            .withRotationalRate(joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
+        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed))
+            .withVelocityY(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed)
+            .withRotationalRate(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1) / 6) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -82,7 +82,8 @@ public class RobotContainer {
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
-    joy4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-joy4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
@@ -102,6 +103,6 @@ public class RobotContainer {
       PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
 
       // Create a path following command using AutoBuilder. This will also trigger event markers.
-      return AutoBuilder.followPath(path);
+      return new PathPlannerAuto("Example Path");
     }
 }

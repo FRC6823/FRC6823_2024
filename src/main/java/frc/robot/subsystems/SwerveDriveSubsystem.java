@@ -43,12 +43,14 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        kevin();
     }
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        kevin();
     }
 
     public boolean kevin(){  

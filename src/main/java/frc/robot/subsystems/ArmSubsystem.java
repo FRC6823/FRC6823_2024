@@ -46,12 +46,12 @@ public class ArmSubsystem extends SubsystemBase{
          */
         fwd_LimitSwitch5 = motor5.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         rev_LimitSwitch5 = motor5.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        fwd_LimitSwitch5.enableLimitSwitch(false);
+        fwd_LimitSwitch5.enableLimitSwitch(true);
         rev_LimitSwitch5.enableLimitSwitch(true);
 
         fwd_LimitSwitch6 = motor6.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         rev_LimitSwitch6 = motor6.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        fwd_LimitSwitch6.enableLimitSwitch(false);
+        fwd_LimitSwitch6.enableLimitSwitch(true);
         rev_LimitSwitch6.enableLimitSwitch(true);
         
         /*
