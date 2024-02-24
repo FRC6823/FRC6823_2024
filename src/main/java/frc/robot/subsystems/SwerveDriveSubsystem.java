@@ -53,7 +53,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         }
     }
 
-    public boolean kevin(){  
+    /*public boolean kevin(){  
         AutoBuilder.configureHolonomic(
             this::getPose, 
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -80,7 +80,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
             this // Reference to this subsystem to set requirements
         );
     return false;
-    }
+    }*/
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));

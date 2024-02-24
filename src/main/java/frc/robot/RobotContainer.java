@@ -69,17 +69,10 @@ public class RobotContainer {
     drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     
     configureBindings();
-    drivetrain.kevin();
   }
   
 
  private void configureBindings() {
-    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed))
-            .withVelocityY(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed)
-            .withRotationalRate(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1) / 6) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
-    
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
@@ -106,12 +99,15 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-      // Load the path you want to follow using its name in the GUI
-      //PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
-        
-
-      // Create a path following command using AutoBuilder. This will also trigger event markers.
-      //return AutoBuilder.followPath(path);
+      drivetrain.removeDefaultCommand();
       return handler.getPath();
-    }
+  }
+  
+  public void TeleopInit(){
+      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed))
+            .withVelocityY(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed)
+            .withRotationalRate(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1) / 6) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
+  }
 }

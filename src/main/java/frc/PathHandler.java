@@ -43,10 +43,10 @@ public class PathHandler {
         swerveDriveSubsystem::driveFunc, 
         translationController,
         thetaController,
-        Const.SwerveDrive.MaxSpeed,
+        4,
         Const.SwerveDrive.DriveBaseRadius,
         replanningConfig, 
         swerveDriveSubsystem::getBool, 
-        swerveDriveSubsystem).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.resetPose(new Pose2d(0,0, new Rotation2d(0)))));
+        swerveDriveSubsystem);
     }
 }
