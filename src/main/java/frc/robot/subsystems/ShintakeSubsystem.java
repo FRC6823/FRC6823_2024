@@ -23,7 +23,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     //private DigitalInput inputBeamBreak;
     //private DigitalInput shooterBeamBreak;
     //private AnalogTrigger inputBeamBreak;
-    private AnalogInput inputBeamBreak;
+    //private AnalogInput inputBeamBreak;
 
 
     public ShintakeSubsystem() {
@@ -33,13 +33,15 @@ public class ShintakeSubsystem extends SubsystemBase {
         joy3 = new CommandJoystick(3);
         //inputBeamBreak = new DigitalInput(0);
         //inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak = new AnalogInput(0);
+        //inputBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
         botMotor.setIdleMode(IdleMode.kCoast);
         topMotor.burnFlash();
         botMotor.burnFlash();
+
+        intakeMotor.restoreFactoryDefaults();
     }
 
     public void setShootSpeed(double speed) {
@@ -54,7 +56,6 @@ public class ShintakeSubsystem extends SubsystemBase {
     }
  
     public void setIntakeSpeed(double intakespeed) {
-        MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
         this.intakespeed = intakespeed;
     }
 
@@ -66,8 +67,8 @@ public class ShintakeSubsystem extends SubsystemBase {
     public void periodic() {
         topMotor.set(speed);
         botMotor.set(speed);
-        
-       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
+        intakeMotor.set(intakespeed);
+       //SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
            /*if (inputBeamBreak.getValue()) {
                 intakeMotor.set(0);   
             } else {
