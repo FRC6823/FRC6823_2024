@@ -1,6 +1,7 @@
 package frc.robot.Constants;
 import edu.wpi.first.apriltag.AprilTagPoseEstimator;
 import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Const {
     
@@ -34,8 +35,24 @@ public class Const {
     }
 
     public class SwerveDrive{
+        public static final double DriveBaseRadius = 17.68;
         public static final double MaxSpeed = 6; // 6 meters per second desired top speed
+        public static final double MaxAccel = 6;
         public static final double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+        public static final double MaxAngularAccel = MaxAngularRate/2;
+        public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(MaxAngularRate, MaxAngularAccel);
+
+        public static final double kP = 2.2941;//2.2941
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kA = 0.435;
+        public static final double kV = 2.344;
+        public static final double kS = 0.628;
+
+        public static final double kPThetaController = 2.0; //1.5;
+        public static final double kIThetaController = 0.0;
+        public static final double kDThetaController = 0.0;
+
     }
 
     public class Shintake{

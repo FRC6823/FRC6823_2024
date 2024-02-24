@@ -14,7 +14,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -36,6 +38,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private double m_lastSimTime;
     private Telemetry telemetry;
     private CommandJoystick joy3;
+    private Translation2d velocities;
 
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -78,6 +81,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         );
     return false;
     }
+
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
@@ -106,14 +110,27 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     public ChassisSpeeds getCurrSpeed(){
-        return new ChassisSpeeds(joy3.getRawAxis(0), joy3.getRawAxis(1), joy3.getRawAxis(5) * Const.SwerveDrive.MaxAngularRate);
+        velocities = Telemetry.getVelocities();
+        return new ChassisSpeeds(velocities.getX(), velocities.getY(), velocities.getAngle().getRadians()); 
+        //return new ChassisSpeeds(0,0,0);
     }
 
     public void driveFunc(ChassisSpeeds speeds){
-        SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric().withDeadband(Const.SwerveDrive.MaxSpeed * 0.1).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-        applyRequest(() -> drive.withVelocityX(speeds.vxMetersPerSecond)
+        SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.Velocity);
+
+        SwerveRequest a = new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds);
+        a.apply(m_requestParameters, Modules);
+
+        /*applyRequest(() -> drive.withVelocityX(speeds.vxMetersPerSecond)
                             .withVelocityY(speeds.vyMetersPerSecond)
-                            .withRotationalRate(speeds.omegaRadiansPerSecond));
+                            .withRotationalRate(speeds.omegaRadiansPerSecond));*/
+    }
+
+    public SwerveDriveKinematics getKinematics(){
+        return m_kinematics;
+    }
+
+    public boolean getBool(){
+        return true;
     }
 }

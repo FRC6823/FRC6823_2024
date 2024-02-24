@@ -29,6 +29,8 @@ public class Telemetry {
         MaxSpeed = maxSpeed;
     }
 
+    private static Translation2d velocities;
+
     /* What to publish over networktables for telemetry */
     private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -92,7 +94,7 @@ public class Telemetry {
         Translation2d distanceDiff = pose.minus(m_lastPose).getTranslation();
         m_lastPose = pose;
 
-        Translation2d velocities = distanceDiff.div(diffTime);
+        velocities = distanceDiff.div(diffTime);
 
         speed.set(velocities.getNorm());
         velocityX.set(velocities.getX());
@@ -107,5 +109,9 @@ public class Telemetry {
 
             // SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
+    }
+
+    public static Translation2d getVelocities(){
+        return velocities;
     }
 }

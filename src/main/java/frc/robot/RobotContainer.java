@@ -14,11 +14,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.PathHandler;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
@@ -43,6 +45,7 @@ public class RobotContainer {
 
   private TimedShintake controlledReverse;
 
+  private PathHandler handler;
 
   public RobotContainer() {
     joy4 = new CommandXboxController(4);
@@ -59,6 +62,8 @@ public class RobotContainer {
     point = new SwerveRequest.PointWheelsAt();
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
 
+    handler = new PathHandler(drivetrain);
+
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
     drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
@@ -74,6 +79,7 @@ public class RobotContainer {
             .withVelocityY(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed)
             .withRotationalRate(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1) / 6) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
+    
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
@@ -101,10 +107,11 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
       // Load the path you want to follow using its name in the GUI
-      PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+      //PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
         
 
       // Create a path following command using AutoBuilder. This will also trigger event markers.
-      return AutoBuilder.followPath(path);
+      //return AutoBuilder.followPath(path);
+      return handler.getPath();
     }
 }
