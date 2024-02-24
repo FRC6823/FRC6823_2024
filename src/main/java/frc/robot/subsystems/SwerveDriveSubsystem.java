@@ -86,6 +86,10 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
+    public void resetRequests(){
+        run(() -> this.setControl(null));
+    }
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 

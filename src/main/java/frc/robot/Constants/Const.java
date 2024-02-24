@@ -42,14 +42,14 @@ public class Const {
         public static final double MaxAngularAccel = MaxAngularRate/2;
         public static final TrapezoidProfile.Constraints kTurnControlConstraints = new TrapezoidProfile.Constraints(MaxAngularRate, MaxAngularAccel);
 
-        public static final double kP = 2.2941;//2.2941
+        public static final double kP = 1.2941;//2.2941
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kA = 0.435;
         public static final double kV = 2.344;
         public static final double kS = 0.628;
 
-        public static final double kPThetaController = 2.0; //1.5;
+        public static final double kPThetaController = 1.0; //2.0;
         public static final double kIThetaController = 0.0;
         public static final double kDThetaController = 0.0;
 

@@ -35,7 +35,7 @@ public class PathHandler {
     public Command getPath(){
         PathPlannerPath path;
         
-        path = PathPlannerPath.fromPathFile("Example Path");
+        path = PathPlannerPath.fromPathFile("New Path");
 
         return new FollowPathHolonomic(path, 
         swerveDriveSubsystem::getPose, 

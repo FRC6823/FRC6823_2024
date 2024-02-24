@@ -39,7 +39,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.setIdleMode(IdleMode.kCoast);
         botMotor.setIdleMode(IdleMode.kCoast);
         topMotor.burnFlash();
-        botMotor.burnFlash();
+        botMotor.burnFlash();  
     }
 
     public void setShootSpeed(double speed) {
