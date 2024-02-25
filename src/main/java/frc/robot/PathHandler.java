@@ -1,4 +1,4 @@
-package frc;
+package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathConstraints;
@@ -26,10 +26,10 @@ public class PathHandler {
     {
         this.swerveDriveSubsystem = swerveDriveSubsystem;
 
-        translationController = new PIDConstants(Const.SwerveDrive.kP, 0.0001, 0);
-        thetaController = new PIDConstants(Const.SwerveDrive.kPThetaController, Const.SwerveDrive.kIThetaController, Const.SwerveDrive.kDThetaController);
+        translationController = new PIDConstants(Const.SwerveDrive.kP, 0, 0);
+        thetaController = new PIDConstants(0, Const.SwerveDrive.kIThetaController, Const.SwerveDrive.kDThetaController);
 
-        replanningConfig = new ReplanningConfig(false, true);
+        replanningConfig = new ReplanningConfig(false, false);
     }
 
     public Command getPath(){
@@ -40,13 +40,13 @@ public class PathHandler {
         return new FollowPathHolonomic(path, 
         swerveDriveSubsystem::getPose, 
         swerveDriveSubsystem::getCurrSpeed, 
-        swerveDriveSubsystem::driveFunc, 
+        swerveDriveSubsystem::driveRC, 
         translationController,
         thetaController,
-        4,
+        Const.SwerveDrive.MaxSpeed,
         Const.SwerveDrive.DriveBaseRadius,
         replanningConfig, 
         swerveDriveSubsystem::getBool, 
-        swerveDriveSubsystem);
+        swerveDriveSubsystem).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.tareEverything()));
     }
 }

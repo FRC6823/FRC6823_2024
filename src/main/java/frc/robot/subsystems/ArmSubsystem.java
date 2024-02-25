@@ -148,11 +148,11 @@ public class ArmSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
+        /*SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
         SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch5.isLimitSwitchEnabled() && fwd_LimitSwitch6.isLimitSwitchEnabled() );
         SmartDashboard.putBoolean("Rev 5 & 6 Limit Enabled", rev_LimitSwitch5.isLimitSwitchEnabled() && rev_LimitSwitch6.isLimitSwitchEnabled() );
         SmartDashboard.putBoolean("Forward Limit Status", fwd_LimitSwitch5.isPressed() && fwd_LimitSwitch6.isPressed());
-        SmartDashboard.putBoolean("Reverse Limit Status", rev_LimitSwitch5.isPressed() && rev_LimitSwitch6.isPressed());
+        SmartDashboard.putBoolean("Reverse Limit Status", rev_LimitSwitch5.isPressed() && rev_LimitSwitch6.isPressed());*/
         
         // SmartDashboard.putNumber("Speed", speed);
 

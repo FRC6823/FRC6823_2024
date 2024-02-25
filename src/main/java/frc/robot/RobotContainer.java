@@ -6,22 +6,17 @@ package frc.robot;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.PathHandler;
+import frc.robot.Commands.FCD;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
@@ -42,6 +37,7 @@ public class RobotContainer {
   private SwerveRequest.FieldCentric drive;
   private SwerveRequest.SwerveDriveBrake brake;
   private SwerveRequest.PointWheelsAt point;
+  private FCD fcd;
   private Telemetry logger;
 
   private TimedShintake controlledReverse;
@@ -51,16 +47,15 @@ public class RobotContainer {
   public RobotContainer() {
     joy4 = new CommandXboxController(4);
     joy3 = new CommandJoystick(3);
+    joy3.setXChannel(0);
+    joy3.setYChannel(1);
+    joy3.setTwistChannel(5);
 
     armSubsystem = new ArmSubsystem();
     drivetrain = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
 
-    drive = new SwerveRequest.FieldCentric()
-      .withDeadband(Const.SwerveDrive.MaxSpeed * 0.01).withRotationalDeadband(Const.SwerveDrive.MaxAngularRate * 0.01) // Add a 1% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    brake = new SwerveRequest.SwerveDriveBrake();
-    point = new SwerveRequest.PointWheelsAt();
+    fcd = new FCD(drivetrain, joy3);
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
 
     handler = new PathHandler(drivetrain);
@@ -76,10 +71,6 @@ public class RobotContainer {
  private void configureBindings() {
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    joy3.button(8).whileTrue(drivetrain.applyRequest(() -> brake));
-    joy3.button(9).whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joy3.getRawAxis(1), -joy3.getRawAxis(0)))));//Y is 0 X is 1
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
@@ -109,10 +100,6 @@ public class RobotContainer {
   }
 
   public void teleopInit(){
-      drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed))
-            .withVelocityY(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1) / 4) * Const.SwerveDrive.MaxSpeed)
-            .withRotationalRate(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1) / 6) * Const.SwerveDrive.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+      drivetrain.setDefaultCommand(fcd);
   }
 }

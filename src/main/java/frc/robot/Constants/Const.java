@@ -1,6 +1,4 @@
 package frc.robot.Constants;
-import edu.wpi.first.apriltag.AprilTagPoseEstimator;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class Const {
@@ -53,6 +51,9 @@ public class Const {
         public static final double kIThetaController = 0.0;
         public static final double kDThetaController = 0.0;
 
+
+        //Driver Constants
+        public static final double deadband = 0.1;
     }
 
     public class Shintake{
