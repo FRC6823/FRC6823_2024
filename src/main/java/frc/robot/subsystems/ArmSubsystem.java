@@ -15,9 +15,8 @@ import frc.robot.Constants.Const;
 //heavily "inspired" by Rev example code
 
 public class ArmSubsystem extends SubsystemBase{
-    private CANSparkMax motor5, motor6;
+    private CANSparkMax motor11, motor15;
     private SparkPIDController pidController;
-    // private SparkPIDController pidController2;
     private SparkAbsoluteEncoder encoder;
     private SparkLimitSwitch fwd_LimitSwitch5, fwd_LimitSwitch6;
     private SparkLimitSwitch rev_LimitSwitch5, rev_LimitSwitch6;
@@ -27,98 +26,82 @@ public class ArmSubsystem extends SubsystemBase{
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     
     public ArmSubsystem () {
-        
-        /*
-         * To Do: Change all CAN IDs to come from Const.java
-         */
-        
-        /*
-         * To Do: Change all CAN IDs to come from Const.java
-         */
-        motor5 = new CANSparkMax(11, MotorType.kBrushless);
-        motor6 = new CANSparkMax(15, MotorType.kBrushless);
 
         /*
-         * Make sure you are configuring the Sparks in CODE not in firmware (via usb)
-         * so that if you have to replace a Spark quickly,
+         * To Do: Change all CAN IDs to come from Const.java
+         */
+        motor11 = new CANSparkMax(11, MotorType.kBrushless);
+        motor15 = new CANSparkMax(15, MotorType.kBrushless);
+
+        /*
+         * Make sure you are configuring the Sparks in CODE not in firmware (ie, via usb)
+         * With code configuration, if you have to replace a Spark quickly,
          * you don't have to fight with any config except the CAN ID
         */
+        motor11.restoreFactoryDefaults();
+        motor15.restoreFactoryDefaults();
+        
+        /* 
+         * Motor15 faces the "reverse" direction, so invert it then set motor 5 to follow it
+         * Doing this allows us to send the speed to just one and get the right motion from both
+         */
+        motor15.setInverted(true);
+        motor11.follow(motor15, true);
+        
         /*
-         * Make sure you are configuring the Sparks in CODE not in firmware (via usb)
-         * so that if you have to replace a Spark quickly,
-         * you don't have to fight with any config except the CAN ID
-        */
-        motor5.restoreFactoryDefaults();
-        motor6.restoreFactoryDefaults();
-        motor5.follow(motor6, true);
-        /*
-         * Define the switches.
          * LimitSwitches are enabled upon creation, but we have the option to disable here
          */
-        fwd_LimitSwitch5 = motor5.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        rev_LimitSwitch5 = motor5.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch5 = motor11.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch5 = motor11.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         fwd_LimitSwitch5.enableLimitSwitch(true);
         rev_LimitSwitch5.enableLimitSwitch(true);
 
-        fwd_LimitSwitch6 = motor6.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        rev_LimitSwitch6 = motor6.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch6 = motor15.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch6 = motor15.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
         fwd_LimitSwitch6.enableLimitSwitch(true);
         rev_LimitSwitch6.enableLimitSwitch(true);
         
+		/* 
+		//Doesn't quite work the way I expected.  Need to troubleshoot
+		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)Const.Arm.UP_ANGLE);
+		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float)Const.Arm.DOWN_ANGLE);
+		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true); 
+		 * 
+		*/
+		
+
         /*
          * Resist arm movement when at "rest"
          */
-        /*
-         * Resist arm movement when at "rest"
-         */
-        motor5.setIdleMode(IdleMode.kBrake);
-        motor6.setIdleMode(IdleMode.kBrake);
+        motor11.setIdleMode(IdleMode.kBrake);
+        motor15.setIdleMode(IdleMode.kBrake);
         
-        /* 
-         * Motor 6 faces the opposite direction of motor 5, so invert it
-         * Doing this allows us to send the same speed to both and get the right motion
-         * 
-         * To Do:
-         *      -Rename these so they use robot left or robot right
-         *      -Configure one motor to follow the other (follower mode)
-         *          does this work with absolute encoders and limit switches?
-        */
-        //motor6.setInverted(true);
-        
-        /* 
-         * Motor 6 faces the opposite direction of motor 5, so invert it
-         * Doing this allows us to send the same speed to both and get the right motion
-         * 
-         * To Do:
-         *      -Rename these so they use robot left or robot right
-         *      -Configure one motor to follow the other (follower mode)
-         *          does this work with absolute encoders and limit switches?
-        */
-        //motor6.setInverted(true);
 
         //  Write the config to flash memory on the Spark Max so that the settings can survive a brownout/power outage.
-        motor5.burnFlash();
-        motor6.burnFlash();
+        motor11.burnFlash();
+        motor15.burnFlash();
 
-        pidController = motor6.getPIDController();
-        encoder = motor6.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        pidController = motor15.getPIDController();
+        encoder = motor15.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        encoder.setInverted(false);
         pidController.setFeedbackDevice(encoder);
-        // pidController2 = motor6.getPIDController();
         armSpeed = 0;
-        //setPoint2 = 0;
         
         setPoint = getEncoderPosition();
 
+        
 
 /*
  * PID Tuning Stuff
  */
 // PID coefficients
-kP = 6e-5;
+kP = .1;
 kI = 0;
 kD = 0;
 kIz = 0;
-kFF = 0.000015;
+// kFF = 0.1000015;
+kFF = 0;
 kMaxOutput = .2;
 kMinOutput = -.2;
 maxRPM = 5700;
@@ -169,7 +152,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
 
     public void goToAngle(double setPoint){
         this.setPoint = setPoint;
-        pidController.setReference(setPoint, CANSparkBase.ControlType.kPosition);
+        pidController.setReference(setPoint, CANSparkBase.ControlType.kDutyCycle);
     }
 
     public void set(double speed){
@@ -177,14 +160,14 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
          * This limits the total speed rate.  Should NOT do it this way!
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
-        armSpeed = speed * .1;
-        motor6.set(armSpeed);
+        armSpeed = speed * .2;
+        motor15.set(armSpeed);
             //motor6.set(speed);
     }
     public void stop() {
         armSpeed = 0;
-        motor5.stopMotor();
-        motor6.stopMotor();
+        motor11.stopMotor();
+        motor15.stopMotor();
     }
 
     public double getEncoderPosition() {
@@ -220,7 +203,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         pidController.setOutputRange(min, max); 
         kMinOutput = min; kMaxOutput = max; 
         }
-
+        
         /**
          * PIDController objects are commanded to a set point using the 
          * SetReference() method.
@@ -239,7 +222,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         // pidController.setReference(setPoint, CANSparkBase.ControlType.kPosition);
         
         SmartDashboard.putNumber("SetPoint", setPoint);
-        SmartDashboard.putNumber("ProcessVariable", encoder.getVelocity());
+        SmartDashboard.putNumber("ProcessVariable", encoder.getPosition());
 
         // SmartDashboard.putNumber("Speed", speed);
 
