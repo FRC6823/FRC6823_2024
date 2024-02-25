@@ -102,4 +102,6 @@ public class Const {
     public class Limelight{
         
     }
+
+    public static final double[] startingScorePose = new double[] {0.5, -90};
 }

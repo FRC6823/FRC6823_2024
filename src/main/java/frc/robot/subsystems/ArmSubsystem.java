@@ -31,9 +31,18 @@ public class ArmSubsystem extends SubsystemBase{
         /*
          * To Do: Change all CAN IDs to come from Const.java
          */
+        
+        /*
+         * To Do: Change all CAN IDs to come from Const.java
+         */
         motor5 = new CANSparkMax(11, MotorType.kBrushless);
         motor6 = new CANSparkMax(15, MotorType.kBrushless);
 
+        /*
+         * Make sure you are configuring the Sparks in CODE not in firmware (via usb)
+         * so that if you have to replace a Spark quickly,
+         * you don't have to fight with any config except the CAN ID
+        */
         /*
          * Make sure you are configuring the Sparks in CODE not in firmware (via usb)
          * so that if you have to replace a Spark quickly,
@@ -59,8 +68,22 @@ public class ArmSubsystem extends SubsystemBase{
         /*
          * Resist arm movement when at "rest"
          */
+        /*
+         * Resist arm movement when at "rest"
+         */
         motor5.setIdleMode(IdleMode.kBrake);
         motor6.setIdleMode(IdleMode.kBrake);
+        
+        /* 
+         * Motor 6 faces the opposite direction of motor 5, so invert it
+         * Doing this allows us to send the same speed to both and get the right motion
+         * 
+         * To Do:
+         *      -Rename these so they use robot left or robot right
+         *      -Configure one motor to follow the other (follower mode)
+         *          does this work with absolute encoders and limit switches?
+        */
+        //motor6.setInverted(true);
         
         /* 
          * Motor 6 faces the opposite direction of motor 5, so invert it

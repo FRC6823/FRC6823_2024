@@ -8,6 +8,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -18,9 +20,11 @@ public class ShintakeSubsystem extends SubsystemBase {
 
     private double speed;
     private double intakespeed;
-    private DigitalInput inputBeamBreak;
-
+    //private DigitalInput inputBeamBreak;
     //private DigitalInput shooterBeamBreak;
+    //private AnalogTrigger inputBeamBreak;
+    private AnalogInput inputBeamBreak;
+
 
     public ShintakeSubsystem() {
         topMotor    = new CANSparkMax(14, MotorType.kBrushless);
@@ -35,14 +39,11 @@ public class ShintakeSubsystem extends SubsystemBase {
         
         topMotor.setIdleMode(IdleMode.kCoast);
         botMotor.setIdleMode(IdleMode.kCoast);
-        intakeMotor.setIdleMode(IdleMode.kBrake);
+        //inputBeamBreak = new DigitalInput(0);
+        //inputBeamBreak = new AnalogTrigger(0);
+        inputBeamBreak = new AnalogInput(0);
 
-        topMotor.burnFlash();
-        botMotor.burnFlash();
-        intakeMotor.burnFlash();
 
-        inputBeamBreak = new DigitalInput(0);
-        
         topPIDController = topMotor.getPIDController();
         topPIDController.setP(Const.Shintake.skP);
         topPIDController.setI(Const.Shintake.skI);
@@ -53,29 +54,32 @@ public class ShintakeSubsystem extends SubsystemBase {
     }
 
     public void setShootSpeed(double speed) {
-        this.speed = speed;
         MathUtil.applyDeadband(speed, Const.Shintake.sSpeedDeadband, Const.Shintake.sSpeedMax);
+        /*
+         * This is taking the -1 to 1 range of the joystick and converts it to 0 to 1
+         */
+        this.speed = (speed+1)/2;
+    }
+    public void stopShooter(){
+        this.speed = 0;
     }
 
     public void setIntakeSpeed(double intakespeed) {
-        this.intakespeed = intakespeed;
         MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
+        this.intakespeed = intakespeed;
     }
 
-/* 
-    public boolean getinputBeamBreak() { //not currently used
+    /*public boolean getinputBeamBreak() { //not currently used
         //return if beam is broken
         return inputBeamBreak.get();
-    }
-*/
+    }*/
 
     public void periodic() {
         topMotor.set(speed);
         //botMotor.set(speed);
         
-        SmartDashboard.putBoolean("BeamBreak", inputBeamBreak.get());
-           /*
-            if (inputBeamBreak.get()) {
+       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
+           /*if (inputBeamBreak.getValue()) {
                 intakeMotor.set(0);   
             } else {
                 intakeMotor.set(intakespeed); 
