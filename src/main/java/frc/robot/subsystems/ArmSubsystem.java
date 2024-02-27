@@ -152,7 +152,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
 
     public void goToAngle(double setPoint){
         this.setPoint = setPoint;
-        pidController.setReference(setPoint, CANSparkBase.ControlType.kDutyCycle);
+        pidController.setReference(setPoint, CANSparkBase.ControlType.kPosition);
     }
 
     public void set(double speed){
@@ -165,6 +165,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
     }
     public void stop() {
         armSpeed = 0;
+        setPoint = getEncoderPosition();
         motor11.stopMotor();
         motor15.stopMotor();
     }
@@ -221,12 +222,10 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         // pidController.setReference(setPoint, CANSparkBase.ControlType.kPosition);
         
         SmartDashboard.putNumber("SetPoint", setPoint);
-        SmartDashboard.putNumber("ProcessVariable", encoder.getPosition());
+        // SmartDashboard.putNumber("ProcessVariable", encoder.getPosition());
 
         // SmartDashboard.putNumber("Speed", speed);
 
-        //motor5.set(setPoint);
-        //motor6.set(setPoint2);
     }
 
    
