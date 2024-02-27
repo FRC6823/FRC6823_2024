@@ -18,8 +18,8 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax motor11, motor15;
     private SparkPIDController pidController;
     private SparkAbsoluteEncoder encoder;
-    private SparkLimitSwitch fwd_LimitSwitch5, fwd_LimitSwitch6;
-    private SparkLimitSwitch rev_LimitSwitch5, rev_LimitSwitch6;
+    private SparkLimitSwitch fwd_LimitSwitch11, fwd_LimitSwitch15;
+    private SparkLimitSwitch rev_LimitSwitch11, rev_LimitSwitch15;
     private double setPoint;
     // private double setPoint2;
     private double armSpeed;
@@ -51,15 +51,15 @@ public class ArmSubsystem extends SubsystemBase{
         /*
          * LimitSwitches are enabled upon creation, but we have the option to disable here
          */
-        fwd_LimitSwitch5 = motor11.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        rev_LimitSwitch5 = motor11.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        fwd_LimitSwitch5.enableLimitSwitch(true);
-        rev_LimitSwitch5.enableLimitSwitch(true);
+        fwd_LimitSwitch11 = motor11.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch11 = motor11.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch11.enableLimitSwitch(true);
+        rev_LimitSwitch11.enableLimitSwitch(true);
 
-        fwd_LimitSwitch6 = motor15.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        rev_LimitSwitch6 = motor15.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-        fwd_LimitSwitch6.enableLimitSwitch(true);
-        rev_LimitSwitch6.enableLimitSwitch(true);
+        fwd_LimitSwitch15 = motor15.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        rev_LimitSwitch15 = motor15.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
+        fwd_LimitSwitch15.enableLimitSwitch(true);
+        rev_LimitSwitch15.enableLimitSwitch(true);
         
 		/* 
 		//Doesn't quite work the way I expected.  Need to troubleshoot
@@ -162,7 +162,6 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
          */
         armSpeed = speed * .2;
         motor15.set(armSpeed);
-            //motor6.set(speed);
     }
     public void stop() {
         armSpeed = 0;
@@ -179,10 +178,10 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
     public void periodic(){
         SmartDashboard.putNumber("Arm Speed", armSpeed);
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
-        SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch5.isLimitSwitchEnabled() && fwd_LimitSwitch6.isLimitSwitchEnabled() );
-        SmartDashboard.putBoolean("Rev 5 & 6 Limit Enabled", rev_LimitSwitch5.isLimitSwitchEnabled() && rev_LimitSwitch6.isLimitSwitchEnabled() );
-        SmartDashboard.putBoolean("Forward Limit Status", fwd_LimitSwitch5.isPressed() && fwd_LimitSwitch6.isPressed());
-        SmartDashboard.putBoolean("Reverse Limit Status", rev_LimitSwitch5.isPressed() && rev_LimitSwitch6.isPressed());
+        SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch11.isLimitSwitchEnabled() && fwd_LimitSwitch15.isLimitSwitchEnabled() );
+        SmartDashboard.putBoolean("Rev 5 & 6 Limit Enabled", rev_LimitSwitch11.isLimitSwitchEnabled() && rev_LimitSwitch15.isLimitSwitchEnabled() );
+        SmartDashboard.putBoolean("Forward Limit Status", fwd_LimitSwitch11.isPressed() && fwd_LimitSwitch15.isPressed());
+        SmartDashboard.putBoolean("Reverse Limit Status", rev_LimitSwitch11.isPressed() && rev_LimitSwitch15.isPressed());
         
         // read PID coefficients from SmartDashboard
         double p = SmartDashboard.getNumber("P Gain", 0);
