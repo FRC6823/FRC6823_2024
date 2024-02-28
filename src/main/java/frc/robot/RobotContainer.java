@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Commands.IntakePiece;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
@@ -39,6 +40,7 @@ public class RobotContainer {
   private Telemetry logger;
 
   private TimedShintake controlledReverse;
+  private IntakePiece intakePiece;
 
 
   public RobotContainer() {
@@ -57,6 +59,7 @@ public class RobotContainer {
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
+    intakePiece = new IntakePiece(shintake, .3);
 
     configureBindings();
   }
@@ -88,7 +91,7 @@ public class RobotContainer {
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
-    joy4.a().onTrue(new InstantCommand(() -> shintake.intakePiece(.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    joy4.a().whileTrue(intakePiece).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
