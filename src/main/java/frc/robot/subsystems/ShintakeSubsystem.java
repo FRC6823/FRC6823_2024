@@ -36,7 +36,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
 
-        /*inputBeamBreak0 = new AnalogTrigger(0);
+        inputBeamBreak0 = new AnalogTrigger(0);
         inputBeamBreak0.setLimitsRaw(600, 800);
         beam0Empty = inputBeamBreak0.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
@@ -46,12 +46,12 @@ public class ShintakeSubsystem extends SubsystemBase {
 
         inputBeamBreak2 = new AnalogTrigger(2);
         inputBeamBreak2.setLimitsRaw(600, 800); //placeholder
-        beam2Empty = inputBeamBreak2.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);*/
+        beam2Empty = inputBeamBreak2.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
         //for smartdashboard but doesn't work in tandem with AnalogTrigger
-        rawBeamBreak0 = new AnalogInput(0); 
+        /*rawBeamBreak0 = new AnalogInput(0); 
         rawBeamBreak1 = new AnalogInput(1); 
-        rawBeamBreak2 = new AnalogInput(2);
+        rawBeamBreak2 = new AnalogInput(2); */
 
 
         topMotor.restoreFactoryDefaults();
@@ -78,19 +78,19 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.intakespeed = intakespeed;
     }
 
-    /*public void intakePiece(double intakespeed) { 
+    public void intakePiece(double intakespeed) { 
         if (beam0Empty.get() && beam1Empty.get() && beam2Empty.get()) { //everything is empty the world is sad. FILL ME WITH NOTES OF JOY!
             setIntakeSpeed(intakespeed);
             pieceReady = false;
         } else if (!beam0Empty.get() && !beam1Empty.get() && beam2Empty.get()) { //a note exists but does not touch shooter (THIS IS VERY GOOD)
             setIntakeSpeed(0);
             pieceReady = true;
-        } else if (!beam2Empty.get()){ //a note exists but goes too far and touches the shooter (THIS IS VERY BAD)
+        } else if (!beam1Empty.get() && !beam2Empty.get()){ //a note exists but goes too far and touches the shooter (THIS IS VERY BAD)
             do{
                 setIntakeSpeed(-intakespeed);
                 pieceReady = false;
             } while (beam0Empty.get());
-                pieceReady = true;
+            }
         } /*else { //when things break terribly or the univerise disintigrates
 
         }
@@ -102,13 +102,13 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.set(speed);
         intakeMotor.set(intakespeed);
         
-       SmartDashboard.putNumber("rawBeamBreak0", rawBeamBreak0.getValue());
+       /*SmartDashboard.putNumber("rawBeamBreak0", rawBeamBreak0.getValue());
        SmartDashboard.putNumber("rawBeamBreak1", rawBeamBreak1.getValue());
-       SmartDashboard.putNumber("rawBeamBreak2", rawBeamBreak2.getValue());
-       /*SmartDashboard.putBoolean("BeamSignal0", beam0Empty.get());
+       SmartDashboard.putNumber("rawBeamBreak2", rawBeamBreak2.getValue());*/
+       SmartDashboard.putBoolean("BeamSignal0", beam0Empty.get());
        SmartDashboard.putBoolean("BeamSignal1", beam1Empty.get());
        SmartDashboard.putBoolean("BeamSignal2", beam2Empty.get());
-       SmartDashboard.putBoolean("pieceReady", pieceReady);*/
+       SmartDashboard.putBoolean("pieceReady", pieceReady);
        
     }
 

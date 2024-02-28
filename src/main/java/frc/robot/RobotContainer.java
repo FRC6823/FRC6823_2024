@@ -87,9 +87,8 @@ public class RobotContainer {
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
-    //joy4.a().onTrue(new InstantCommand(() -> shintake.intakePiece(.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
-
+    joy4.a().onTrue(new InstantCommand(() -> shintake.intakePiece(.3))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
