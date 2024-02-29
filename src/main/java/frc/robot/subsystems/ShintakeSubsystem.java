@@ -18,12 +18,12 @@ public class ShintakeSubsystem extends SubsystemBase {
     private CANSparkMax topMotor, botMotor, intakeMotor;
     private double speed;
     private double intakespeed;
-    private AnalogTrigger inputBeamBreak0;
-    private AnalogTrigger inputBeamBreak1;
-    private AnalogTrigger inputBeamBreak2;
-    private AnalogInput rawBeamBreak0;
+    private AnalogTrigger BeamBreak0;
+    private AnalogTrigger BeamBreak1;
+    private AnalogTrigger BeamBreak2;
+    /*+private AnalogInput rawBeamBreak0;
     private AnalogInput rawBeamBreak1;
-    private AnalogInput rawBeamBreak2;
+    private AnalogInput rawBeamBreak2; */
     public AnalogTriggerOutput beam0Empty;
     public AnalogTriggerOutput beam1Empty;
     public AnalogTriggerOutput beam2Empty;
@@ -35,26 +35,25 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
 
-        inputBeamBreak0 = new AnalogTrigger(0);
-        inputBeamBreak0.setLimitsRaw(600, 800);
-        inputBeamBreak0.setAveraged(true); 
-        beam0Empty = inputBeamBreak0.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+        BeamBreak0 = new AnalogTrigger(0);
+        BeamBreak0.setAveraged(true); 
+        BeamBreak0.setLimitsRaw(600, 800);
+        beam0Empty = BeamBreak0.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
-        inputBeamBreak1 = new AnalogTrigger(1);
-        inputBeamBreak1.setLimitsRaw(600, 800);
-        inputBeamBreak1.setAveraged(true); 
-        beam1Empty = inputBeamBreak1.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+        BeamBreak1 = new AnalogTrigger(1);
+        BeamBreak1.setAveraged(true); 
+        BeamBreak1.setLimitsRaw(700, 1100);
+        beam1Empty = BeamBreak1.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
-        inputBeamBreak2 = new AnalogTrigger(2);
-        inputBeamBreak2.setLimitsRaw(600, 800);
-        inputBeamBreak2.setAveraged(true); 
-        beam2Empty = inputBeamBreak2.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow); 
+        BeamBreak2 = new AnalogTrigger(2);
+        BeamBreak2.setAveraged(true); 
+        BeamBreak2.setLimitsRaw(700, 1100);
+        beam2Empty = BeamBreak2.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
-        //for smartdashboard but doesn't work in tandem with AnalogTrigger
-        /*  = new AnalogInput(0); 
+        //for smartdashboard raw values but doesn't work in tandem with AnalogTrigger
+        /*rawBeamBreak0= new AnalogInput(0);
         rawBeamBreak1 = new AnalogInput(1); 
-        rawBeamBreak2 = new AnalogInput(2); */
-
+        rawBeamBreak2 = new AnalogInput(2); */ 
 
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
@@ -87,7 +86,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         
        /*SmartDashboard.putNumber("rawBeamBreak0", rawBeamBreak0.getValue());
        SmartDashboard.putNumber("rawBeamBreak1", rawBeamBreak1.getValue());
-       SmartDashboard.putNumber("rawBeamBreak2", rawBeamBreak2.getValue()); */ 
+       SmartDashboard.putNumber("rawBeamBreak2", rawBeamBreak2.getValue()); */
        SmartDashboard.putBoolean("BeamSignal0", beam0Empty.get());
        SmartDashboard.putBoolean("BeamSignal1", beam1Empty.get());
        SmartDashboard.putBoolean("BeamSignal2", beam2Empty.get());

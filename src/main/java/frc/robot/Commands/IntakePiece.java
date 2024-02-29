@@ -1,9 +1,6 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.AnalogTriggerOutput;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Const;
 import frc.robot.subsystems.ShintakeSubsystem;
 
 
