@@ -68,5 +68,5 @@ public class Const {
         
     }
 
-    public static final double[] startingScorePose = new double[] {0.3, -90};
+    public static final double[] startingScorePose = new double[] {0.3, 0.7, 0.4};
 }
