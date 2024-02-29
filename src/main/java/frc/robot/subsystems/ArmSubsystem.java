@@ -23,7 +23,7 @@ public class ArmSubsystem extends SubsystemBase{
     private double setPoint;
     private double setPoint2;
     private double armSpeed;
-    
+
     public ArmSubsystem () {
         
         /*
@@ -111,10 +111,10 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void goToAngle(double setPoint){
-        this.setPoint = setPoint;
-        //motor5.set(setPoint);
-        //motor6.set(setPoint2);
-        pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+        //this.setPoint = setPoint;
+        motor5.set(setPoint);
+        motor6.set(setPoint2);
+        //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
 
     public void set(double speed){

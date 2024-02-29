@@ -43,36 +43,19 @@ public class ShintakeSubsystem extends SubsystemBase {
     }
 
     public void setShootSpeed(double speed) {
-        MathUtil.applyDeadband(speed, Const.Shintake.sSpeedDeadband, Const.Shintake.sSpeedMax);
-        /*
-         * This is taking the -1 to 1 range of the joystick and converts it to 0 to 1
-         */
-        this.speed = (speed+1)/2;
+        topMotor.set((speed+1)/2);
+        botMotor.set((speed +1 )/2);
+
     }
     public void stopShooter(){
         this.speed = 0;
     }
  
     public void setIntakeSpeed(double intakespeed) {
-        MathUtil.applyDeadband(intakespeed, Const.Shintake.iSpeedDeadband, Const.Shintake.iSpeedMax);
-        this.intakespeed = intakespeed;
+       intakeMotor.set((speed + 1) / 2); 
     }
 
-    /*public boolean getinputBeamBreak() { //not currently used
-        //return if beam is broken
-        return inputBeamBreak.get();
-    }*/
-
-    public void periodic() {
-        topMotor.set(speed);
-        botMotor.set(speed);
-        
-       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
-           //if (inputBeamBreak.getValue()) {
-                //intakeMotor.set(0);   
-            //} else {
-                intakeMotor.set(intakespeed); 
-            //}  
+    public void periodic(){
     }
 
 }

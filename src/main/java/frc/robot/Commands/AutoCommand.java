@@ -17,7 +17,7 @@ public class AutoCommand extends SequentialCommandGroup{
         positionHandler = container.getPositionHandler();
 
         if (autoNum == 1) {
-            addCommands( new InstantCommand(() -> positionHandler.setPose(1)), new WaitCommand(1));
+            addCommands( new InstantCommand(() -> positionHandler.setPose(0)), new WaitCommand(1));
         }
     }
 }
