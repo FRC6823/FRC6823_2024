@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Commands.AutoCommand;
 import frc.robot.Commands.FCD;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
@@ -43,6 +44,8 @@ public class RobotContainer {
   private TimedShintake controlledReverse;
 
   private PathHandler handler;
+  private PositionHandler positionHandler;
+  private AutoCommand auto;
 
   public RobotContainer() {
     joy4 = new CommandXboxController(4);
@@ -66,7 +69,9 @@ public class RobotContainer {
     
     configureBindings();
   }
-  
+  public PositionHandler getPositionHandler() {
+    return positionHandler;
+  }
 
  private void configureBindings() {
     // reset the field-centric heading on left bumper press
@@ -96,7 +101,9 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-      return handler.getPath();
+      //return handler.getPath();
+      auto = new AutoCommand(this, 1);
+      return auto;
   }
 
   public void teleopInit(){
