@@ -112,9 +112,10 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void goToAngle(double setPoint){
         //this.setPoint = setPoint;
-        motor5.set(setPoint);
-        motor6.set(setPoint2);
+        //motor5.set(setPoint);
+        //motor6.set(setPoint2);
         //pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+        assert true;
     }
 
     public void set(double speed){

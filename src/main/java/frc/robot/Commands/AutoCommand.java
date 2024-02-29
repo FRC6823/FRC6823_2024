@@ -13,8 +13,7 @@ public class AutoCommand extends SequentialCommandGroup{
     private ShintakeSubsystem shintakeSubsystem;
     private PositionHandler positionHandler;
 
-    public AutoCommand(RobotContainer container, int autoNum) {
-        positionHandler = container.getPositionHandler();
+    public AutoCommand(PositionHandler positionHandler, int autoNum) {
 
         if (autoNum == 1) {
             addCommands( new InstantCommand(() -> positionHandler.setPose(0)), new WaitCommand(1));

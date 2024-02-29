@@ -2,7 +2,10 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Const;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShintakeSubsystem;
@@ -23,7 +26,6 @@ public class PositionHandler extends Command{
 
         this.armSubsystem = armSubsystem;
         this.shintakeSubsystem = shintakeSubsystem;
-
     }
 
     public void increaseIndex() {

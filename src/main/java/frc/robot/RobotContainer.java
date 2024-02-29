@@ -102,8 +102,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
       //return handler.getPath();
-      auto = new AutoCommand(this, 1);
+      auto = new AutoCommand(positionHandler, 1);
       return auto;
+      
   }
 
   public void teleopInit(){

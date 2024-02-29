@@ -69,4 +69,5 @@ public class Const {
     }
 
     public static final double[] startingScorePose = new double[] {0.3, 0.7, 0.4};
+    public static final double shootSpeed = 0.7;
 }
