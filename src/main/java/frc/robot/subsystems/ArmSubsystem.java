@@ -24,6 +24,8 @@ public class ArmSubsystem extends SubsystemBase{
     // private double setPoint2;
     private double armSpeed;
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+    private double upangle = Const.Arm.UP_ANGLE;
+    private double downangle = Const.Arm.DOWN_ANGLE;
     
     public ArmSubsystem () {
 
@@ -61,14 +63,16 @@ public class ArmSubsystem extends SubsystemBase{
         fwd_LimitSwitch15.enableLimitSwitch(true);
         rev_LimitSwitch15.enableLimitSwitch(true);
         
-		/* 
+        upangle = Const.Arm.UP_ANGLE;
+        downangle = Const.Arm.DOWN_ANGLE;
+        
+        SmartDashboard.putNumber("down angle", downangle);
+        SmartDashboard.putNumber("up angle", upangle);
 		//Doesn't quite work the way I expected.  Need to troubleshoot
-		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)Const.Arm.UP_ANGLE);
-		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float)Const.Arm.DOWN_ANGLE);
+		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)downangle);
+		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float)upangle);
 		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
-		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true); 
-		 * 
-		*/
+		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, false); 
 		
 
         /*
@@ -121,6 +125,7 @@ SmartDashboard.putNumber("I Zone", kIz);
 SmartDashboard.putNumber("Feed Forward", kFF);
 SmartDashboard.putNumber("Max Output", kMaxOutput);
 SmartDashboard.putNumber("Min Output", kMinOutput);
+
 
 /*
  *      pidController.setP(Const.Arm.kP);
@@ -192,6 +197,8 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         double ff = SmartDashboard.getNumber("Feed Forward", 0);
         double max = SmartDashboard.getNumber("Max Output", 0);
         double min = SmartDashboard.getNumber("Min Output", 0);
+        double up = SmartDashboard.getNumber("up angle", 0);
+        double dwn = SmartDashboard.getNumber("down angle", 0);
 
         // if PID coefficients on SmartDashboard have changed, write new values to controller
         if((p != kP)) { pidController.setP(p); kP = p; }
@@ -199,6 +206,8 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         if((d != kD)) { pidController.setD(d); kD = d; }
         if((iz != kIz)) { pidController.setIZone(iz); kIz = iz; }
         if((ff != kFF)) { pidController.setFF(ff); kFF = ff; }
+        if((up != upangle)) { motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)up); upangle = up; }
+        if((dwn != downangle)) { motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)dwn); downangle = dwn; }
         if((max != kMaxOutput) || (min != kMinOutput)) { 
         pidController.setOutputRange(min, max); 
         kMinOutput = min; kMaxOutput = max; 
