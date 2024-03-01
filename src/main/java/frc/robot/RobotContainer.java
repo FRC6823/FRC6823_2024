@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.management.timer.Timer;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -16,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.Commands.AutoCommand;
 import frc.robot.Commands.FCD;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
@@ -44,8 +45,6 @@ public class RobotContainer {
   private TimedShintake controlledReverse;
 
   private PathHandler handler;
-  private PositionHandler positionHandler;
-  private AutoCommand auto;
 
   public RobotContainer() {
     joy4 = new CommandXboxController(4);
@@ -68,9 +67,6 @@ public class RobotContainer {
     drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     
     configureBindings();
-  }
-  public PositionHandler getPositionHandler() {
-    return positionHandler;
   }
 
  private void configureBindings() {
@@ -100,12 +96,18 @@ public class RobotContainer {
     CommandScheduler.getInstance().cancelAll();
   }
 
-  public Command getAutonomousCommand() {
-      //return handler.getPath();
-      auto = new AutoCommand(positionHandler, 1);
-      return auto;
-      
-  }
+  
+
+  /*public Command getAutonomousCommand() {
+    Command goArm;
+    Command goIntake;
+    Command goShoot;
+
+    // new InstantCommand(() -> armSubsystem.goToAngle(0.37));
+    if (armSubsystem.getEncoderPosition() == 0.37){
+      return ( new InstantCommand(() -> shintake.setIntakeSpeed(0.3)), new InstantCommand(() -> shintake.setShootSpeed(0.7)));
+    }  
+  }*/
 
   public void teleopInit(){
       drivetrain.setDefaultCommand(fcd);
