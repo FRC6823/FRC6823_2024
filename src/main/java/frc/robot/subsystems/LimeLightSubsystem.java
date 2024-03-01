@@ -16,12 +16,12 @@ public class LimeLightSubsystem extends SubsystemBase{
 
     private NetworkTable frontTable;
     private NetworkTable backTable;
-    private NetworkTableEntry ftx, btx;
-    private NetworkTableEntry fty, bty;
+    private NetworkTableEntry ftx;
+    private NetworkTableEntry fty;
     //private NetworkTableEntry ltv, rtv;
-    private NetworkTableEntry fb_t, bb_t; //Botpose relative to Target
-    private NetworkTableEntry fb_f, bb_f;
-    private NetworkTableEntry fid, bid;
+    private NetworkTableEntry fb_t; //Botpose relative to Target
+    private NetworkTableEntry fb_f;
+    private NetworkTableEntry fid;
 
     public LimeLightSubsystem(){
         frontTable = NetworkTableInstance.getDefault().getTable("limelight-left");
@@ -31,16 +31,9 @@ public class LimeLightSubsystem extends SubsystemBase{
         //ltv = leftTable.getEntry("tv");
         fb_t = frontTable.getEntry("botpose_targetspace");
         fid = frontTable.getEntry("tid");
-
-        btx = backTable.getEntry("tx");
-        bty = backTable.getEntry("ty");
         //rtv = rightTable.getEntry("tv");
-        bb_t = backTable.getEntry("botpose_targetspace");
-        bid = backTable.getEntry("tid");
 
         fb_f = frontTable.getEntry("botpose");
-        bb_f = backTable.getEntry("botpose");
-
         SendableRegistry.addLW(this, "LimeLight");
     }
 
@@ -72,31 +65,14 @@ public class LimeLightSubsystem extends SubsystemBase{
         return fid.getDouble(0);
     }
 
-    public double bGetTx() {
-        return btx.getDouble(0);
-    }
-    public double bGetTy() {
-        return bty.getDouble(0);
-    }
-    public double bGetId() {
-        return bid.getDouble(0);
-    }
-
     //3d tracking methods
     public double[] fGetTargetSpacePose() {
         return fb_t.getDoubleArray(new double[]{0,0,0,0,0,0});
     }
     
-    public double[] bGetTargetSpacePose() {
-        return bb_t.getDoubleArray(new double[]{0,0,0,0,0,0});
-    }
 
     public boolean fHasValidTarget(){
         return fGetTargetSpacePose()[1] != 0;  
-    }
-
-    public boolean bHasValidTarget(){
-        return bGetTargetSpacePose()[1] != 0;  
     }
 
     public double fGet3dTX() {
@@ -106,16 +82,6 @@ public class LimeLightSubsystem extends SubsystemBase{
         return fGetTargetSpacePose()[2];
     }
 
-    public double bGet3dTX() {
-        return bGetTargetSpacePose()[0];
-    }
-    public double bGet3dTZ() {
-        return bGetTargetSpacePose()[2];
-    }
-
-    public double bGet3dRY() {
-        return bGetTargetSpacePose()[4];
-    }
     public double fGet3dRY() {
         return fGetTargetSpacePose()[4];
     }
@@ -125,25 +91,14 @@ public class LimeLightSubsystem extends SubsystemBase{
         return new Pose2d(poseArr[0], poseArr[1], new Rotation2d(poseArr[5]));
     }
 
-    public Pose2d bGetFSPose(){
-        double[] poseArr = bb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0});
-        return new Pose2d(poseArr[0], poseArr[1], new Rotation2d(poseArr[5]));
-    }
 
     public double fGetTime(){
         return fb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0,0})[6];
     }
 
-    public double bGetTime(){
-        return bb_f.getDoubleArray(new double[]{0,0,0,0,0,0,0,0})[6];
-    }
-
     public void periodic() {
-        SmartDashboard.putNumber("Back TX", bGet3dTX());
         SmartDashboard.putNumber("Front TX", fGet3dTX());
-        SmartDashboard.putNumber("Back TZ", bGet3dTZ());
         SmartDashboard.putNumber("Front TZ", fGet3dTZ());
-        SmartDashboard.putNumber("Back RY", bGet3dRY());
         SmartDashboard.putNumber("Front RY", fGet3dRY());
 
     }
