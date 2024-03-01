@@ -98,16 +98,16 @@ public class RobotContainer {
 
   
 
-  /*public Command getAutonomousCommand() {
-    Command goArm;
-    Command goIntake;
-    Command goShoot;
+  public Command getAutonomousCommand() {
 
-    // new InstantCommand(() -> armSubsystem.goToAngle(0.37));
+    armSubsystem.goToAngle(0.37);
     if (armSubsystem.getEncoderPosition() == 0.37){
-      return ( new InstantCommand(() -> shintake.setIntakeSpeed(0.3)), new InstantCommand(() -> shintake.setShootSpeed(0.7)));
-    }  
-  }*/
+      shintake.setIntakeSpeed(0.3);
+      shintake.setShootSpeed(0.7);
+    } 
+  
+    return new InstantCommand(() -> shintake.stopIntake());
+  }
 
   public void teleopInit(){
       drivetrain.setDefaultCommand(fcd);

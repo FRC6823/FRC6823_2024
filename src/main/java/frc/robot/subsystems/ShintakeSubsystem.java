@@ -50,6 +50,11 @@ public class ShintakeSubsystem extends SubsystemBase {
     public void stopShooter(){
         this.speed = 0;
     }
+
+    public void stopIntake(){
+        this.speed = 0;
+        intakeMotor.set(speed);
+    }
  
     public void setIntakeSpeed(double intakespeed) {
        intakeMotor.set((speed + 1) / 2); 
