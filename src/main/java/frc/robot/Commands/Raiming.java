@@ -28,32 +28,31 @@ public class Raiming {
 
 
 public Raiming(SwerveDriveSubsystem driveTrain, LimeLightSubsystem limeLightsSubsystem, Pigeon2 pigeon, String node) {
-  this.driveTrain = driveTrain;
+  /*this.driveTrain = driveTrain;
   this.limeLightSubsystem = limeLightSubsystem;
   this.pigeon = pigeon;
   this.node = node;
   
-
   //left&right
   xPid = new PIDController(6, 0.001, 0.0); //put apriltag id here
   //yaw
   yawPid = new PIDController(Const.SwerveDrive.yawKP + 0.025, Const.SwerveDrive.yawKi, 0);
   //forward&back
   yPid = new PIDController(3.5, 0, 0);//put apriltag id here
-  //arm (hopefully)
+  //idk
   ryPid = new PIDController(0.075, 0.00, 0);
   
 
   yawPid.enableContinuousInput(0, 360);
-  ryPid.enableContinuousInput(0, 90);
-}
+  ryPid.enableContinuousInput(0, 90);*/
+} 
 
-    // simple proportional turning control with Limelight.
+public void excecute() {
+  // simple proportional turning control with Limelight.
   // "proportional control" is a control algorithm in which the output is proportional to the error.
   // in this case, we are going to return an angular velocity that is proportional to the 
   // "tx" value from the Limelight.
-  double limelight_aim_proportional()
-  {    
+  double limelight_aim_proportional() {    
     // kP (constant of proportionality)
     // this is a hand-tuned number that determines the aggressiveness of our proportional control loop
     // if it is too high, the robot will oscillate around.
@@ -73,6 +72,7 @@ public Raiming(SwerveDriveSubsystem driveTrain, LimeLightSubsystem limeLightsSub
 
     return targetingAngularVelocity;
   }
+}
 
   // simple proportional ranging control with Limelight's "ty" value
   // this works best if your Limelight's mount height and target mount height are different.
