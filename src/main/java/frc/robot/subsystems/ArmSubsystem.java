@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
@@ -16,7 +18,7 @@ import frc.robot.Constants.Const;
 
 public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax motor11, motor15;
-    private SparkPIDController pidController;
+    private PIDController pidController;
     private SparkAbsoluteEncoder encoder;
     private SparkLimitSwitch fwd_LimitSwitch11, fwd_LimitSwitch15;
     private SparkLimitSwitch rev_LimitSwitch11, rev_LimitSwitch15;
@@ -26,6 +28,7 @@ public class ArmSubsystem extends SubsystemBase{
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     private double upangle = Const.Arm.UP_ANGLE;
     private double downangle = Const.Arm.DOWN_ANGLE;
+    private boolean pidEnabled;
     
     public ArmSubsystem () {
 
@@ -71,7 +74,7 @@ public class ArmSubsystem extends SubsystemBase{
 		//Doesn't quite work the way I expected.  Need to troubleshoot
 		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)downangle);
 		motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, (float)upangle);
-		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, false);
 		motor15.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, false); 
 		
 
@@ -86,36 +89,42 @@ public class ArmSubsystem extends SubsystemBase{
         motor11.burnFlash();
         motor15.burnFlash();
 
-        pidController = motor15.getPIDController();
+        // pidController = motor15.getPIDController();
         encoder = motor15.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         encoder.setInverted(false);
-        pidController.setFeedbackDevice(encoder);
         armSpeed = 0;
         
         setPoint = getEncoderPosition();
-
         
-
-/*
- * PID Tuning Stuff
- */
-// PID coefficients
-kP = .1;
-kI = 0;
-kD = 0;
-kIz = 0;
-// kFF = 0.1000015;
-kFF = 0;
-kMaxOutput = .2;
-kMinOutput = -.2;
-maxRPM = 5700;
-// set PID coefficients
-pidController.setP(kP);
-pidController.setI(kI);
-pidController.setD(kD);
-pidController.setIZone(kIz);
-pidController.setFF(kFF);
-pidController.setOutputRange(kMinOutput, kMaxOutput);
+        
+        
+        /*
+        * PID Tuning Stuff
+        */
+        // PID coefficients
+        // kP = .1;
+        kP = 4;
+        kI = 0;
+        kD = 0;
+        kIz = 0;
+        // kFF = 0.1000015;
+        kFF = 0;
+        kMaxOutput = .2;
+        kMinOutput = -.2;
+        maxRPM = 5700;
+        
+        pidController = new PIDController(kP, kI, kD);
+        pidController.setTolerance(.002);
+        pidEnabled = false;
+        // pidController.setFeedbackDevice(encoder);
+        
+        // set PID coefficients
+        pidController.setP(kP);
+        pidController.setI(kI);
+        pidController.setD(kD);
+        pidController.setIZone(kIz);
+        // pidController.setFF(kFF);
+        // pidController.setOutputRange(kMinOutput, kMaxOutput);
 
 // display PID coefficients on SmartDashboard
 SmartDashboard.putNumber("P Gain", kP);
@@ -157,7 +166,11 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
 
     public void goToAngle(double setPoint){
         this.setPoint = setPoint;
-        pidController.setReference(setPoint, CANSparkBase.ControlType.kPosition);
+        pidEnabled = true;
+    }
+
+    public boolean isAtSetPoint(){
+        return pidController.atSetpoint();
     }
 
     public void set(double speed){
@@ -166,10 +179,11 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
         armSpeed = speed * .2;
-        motor15.set(armSpeed);
+        // motor15.set(armSpeed);
     }
     public void stop() {
         armSpeed = 0;
+        pidEnabled = false;
         setPoint = getEncoderPosition();
         motor11.stopMotor();
         motor15.stopMotor();
@@ -182,6 +196,16 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
 
     @Override
     public void periodic(){
+        if (pidEnabled) {
+            motor15.set( MathUtil.clamp(pidController.calculate(encoder.getPosition(), setPoint),
+                                    kMinOutput,
+                                    kMaxOutput)
+                        );
+        }
+        else {
+            
+            motor15.set(armSpeed);
+        }
         SmartDashboard.putNumber("Arm Speed", armSpeed);
         SmartDashboard.putNumber("Arm Encoder", getEncoderPosition());
         SmartDashboard.putBoolean("Fwd 5 & 6 Limit Enabled", fwd_LimitSwitch11.isLimitSwitchEnabled() && fwd_LimitSwitch15.isLimitSwitchEnabled() );
@@ -194,7 +218,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         double i = SmartDashboard.getNumber("I Gain", 0);
         double d = SmartDashboard.getNumber("D Gain", 0);
         double iz = SmartDashboard.getNumber("I Zone", 0);
-        double ff = SmartDashboard.getNumber("Feed Forward", 0);
+        // double ff = SmartDashboard.getNumber("Feed Forward", 0);
         double max = SmartDashboard.getNumber("Max Output", 0);
         double min = SmartDashboard.getNumber("Min Output", 0);
         double up = SmartDashboard.getNumber("up angle", 0);
@@ -205,11 +229,11 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         if((i != kI)) { pidController.setI(i); kI = i; }
         if((d != kD)) { pidController.setD(d); kD = d; }
         if((iz != kIz)) { pidController.setIZone(iz); kIz = iz; }
-        if((ff != kFF)) { pidController.setFF(ff); kFF = ff; }
+        // if((ff != kFF)) { pidController.setFF(ff); kFF = ff; }
         if((up != upangle)) { motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)up); upangle = up; }
         if((dwn != downangle)) { motor15.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, (float)dwn); downangle = dwn; }
         if((max != kMaxOutput) || (min != kMinOutput)) { 
-        pidController.setOutputRange(min, max); 
+        // pidController.setOutputRange(min, max); 
         kMinOutput = min; kMaxOutput = max; 
         }
         
