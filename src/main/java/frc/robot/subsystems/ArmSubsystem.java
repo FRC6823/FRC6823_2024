@@ -103,14 +103,14 @@ public class ArmSubsystem extends SubsystemBase{
         */
         // PID coefficients
         // kP = .1;
-        kP = 4;
+        kP = 5;
         kI = 0;
         kD = 0;
         kIz = 0;
         // kFF = 0.1000015;
         kFF = 0;
-        kMaxOutput = .2;
-        kMinOutput = -.2;
+        kMaxOutput = .8;
+        kMinOutput = -.8;
         maxRPM = 5700;
         
         pidController = new PIDController(kP, kI, kD);
@@ -178,9 +178,10 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
          * This limits the total speed rate.  Should NOT do it this way!
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
-        armSpeed = speed * .2;
+        armSpeed = speed * .4;
         // motor15.set(armSpeed);
     }
+    
     public void stop() {
         armSpeed = 0;
         pidEnabled = false;
@@ -196,6 +197,12 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
 
     @Override
     public void periodic(){
+        /*
+         * If PID is enabled, sets the motor output to a value calculated by the PIDController, but clamped to min and max output.
+         * 
+         * If PID is disabled, just use raw motor speed.
+         * 
+         */
         if (pidEnabled) {
             motor15.set( MathUtil.clamp(pidController.calculate(encoder.getPosition(), setPoint),
                                     kMinOutput,
@@ -203,7 +210,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
                         );
         }
         else {
-            
+
             motor15.set(armSpeed);
         }
         SmartDashboard.putNumber("Arm Speed", armSpeed);
