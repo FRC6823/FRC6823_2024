@@ -30,7 +30,7 @@ public class RobotContainer {
 
   
   private ArmSubsystem armSubsystem;
-  private SwerveDriveSubsystem drivetrain;
+  private CommandSwerveDrivetrain drivetrain;
   private ShintakeSubsystem shintake;
 
   private SwerveRequest.FieldCentric drive;
@@ -81,8 +81,8 @@ public class RobotContainer {
 
     //Arm Commands when button is pressed it is true and when it is released it is false 
     // - is rasing the arm
-    joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(-0.75))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(0.75))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands

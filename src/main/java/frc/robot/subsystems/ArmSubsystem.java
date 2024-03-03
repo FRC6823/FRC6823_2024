@@ -136,10 +136,10 @@ public class ArmSubsystem extends SubsystemBase{
          * This limits the totla speed rate.  Should NOT do it this way!
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
-        armSpeed = speed * .2;
+        armSpeed = speed * .2;  
         SmartDashboard.putNumber("Arm Speed", speed);
         motor5.set(armSpeed);
-            //motor6.set(speed);
+        motor6.set(armSpeed);
     }
     
     public double getEncoderPosition() {
@@ -158,6 +158,6 @@ public class ArmSubsystem extends SubsystemBase{
 
         //motor5.set(setPoint);
         //motor6.set(setPoint2);
-        motor5.set(armSpeed);
+        //motor5.set(armSpeed);
     }
 }
