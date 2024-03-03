@@ -199,7 +199,6 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
         return encoder.getPosition();
     }
 
-
     @Override
     public void periodic(){
         /*

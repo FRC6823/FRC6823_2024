@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Commands.FCD;
 import frc.robot.Commands.TimedDrive;
 import frc.robot.Commands.TimedShintake;
+import frc.robot.Commands.WaitUntilPose;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -51,7 +52,7 @@ public class RobotContainer {
   private SendableChooser<Integer> autoChooser;
 
   public RobotContainer() {
-    joy4 = new CommandXboxController(4);
+    joy4 = new CommandXboxController(5);
     joy3 = new CommandJoystick(3);
     joy3.setXChannel(0);
     joy3.setYChannel(1);
@@ -92,8 +93,17 @@ public class RobotContainer {
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
-    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
-    joy3.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+    
+    joy3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
+    joy3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    joy3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+
+    joy4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
+    joy4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    joy4.button(1).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+    joy4.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -117,8 +127,12 @@ public class RobotContainer {
 
   public Command getACG(int num){
     if (num == 1){
-      return new SequentialCommandGroup(        
+      return new SequentialCommandGroup(
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
+                  new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true),
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)),
+                  new WaitUntilPose(armSubsystem),
                   new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 1), 
                                           new TimedShintake(shintake, 0.5, 1, false))
                   /*new TimedShintake(shintake, 0.6, 1.5, true)*/);

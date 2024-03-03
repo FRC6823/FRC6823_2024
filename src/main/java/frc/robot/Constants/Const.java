@@ -4,8 +4,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public class Const {
     
     public class Arm{
+        // Arm angles
+        public static final double UP_ANGLE = 0.58926248550415;
+        public static final double DOWN_ANGLE = 0.376505047082901;
+
         // PID coefficients
-        public static final double kP = 5e-5;
+        public static final double kP = 5e-2;//5e-5;
         public static final double kP2 = 5e-5;
         public static final double kI2 = 1e-6; 
         public static final double kI = 1e-6;
