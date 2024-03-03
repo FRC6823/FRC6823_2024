@@ -7,7 +7,7 @@ import frc.robot.subsystems.ShintakeSubsystem;
 public class TimedShintake extends Command{
     private ShintakeSubsystem shintake;
     private Timer timer;
-    private double speed, time;
+    private double speed, time, counter;
     private boolean shoot;
 
     public TimedShintake(ShintakeSubsystem shintake, double speed, double time, boolean shoot){
@@ -26,16 +26,27 @@ public class TimedShintake extends Command{
         
         if (shoot){
             shintake.setShootSpeed(speed);
+            counter = 40;
         }
         else{
             shintake.setIntakeSpeed(speed);
+            shintake.hardStopShooter();
+            counter = -1;
+        }
+    }
+
+    public void execute(){
+        if (counter == 0){
+            shintake.setIntakeSpeed(0.3);
+        }
+        else {
+            counter--;
         }
     }
 
     public boolean isFinished(){
         if (timer.hasElapsed(time)){
-            shintake.setIntakeSpeed(0);
-            shintake.stopShooter();
+            shintake.stop();
         }
         return timer.hasElapsed(time);
     }

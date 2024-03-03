@@ -47,8 +47,13 @@ public class ShintakeSubsystem extends SubsystemBase {
         /*
          * This is taking the -1 to 1 range of the joystick and converts it to 0 to 1
          */
-        this.speed = (speed+1)/2;
+        this.speed = (speed);
     }
+    
+    public void hardStopShooter(){
+        this.speed = -0.2;
+    }
+
     public void stopShooter(){
         this.speed = 0;
     }
@@ -73,6 +78,11 @@ public class ShintakeSubsystem extends SubsystemBase {
             //} else {
                 intakeMotor.set(intakespeed); 
             //}  
+    }
+
+    public void stop() {
+        speed = 0;
+        intakespeed = 0;
     }
 
 }

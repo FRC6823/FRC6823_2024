@@ -30,6 +30,9 @@ public class Const {
         public static final double minVel = 0;
         public static final double allowedErr2 = 0;
         public static final double allowedErr = 0;
+        
+        //Positional Constants
+        public static final double subwooferShot = 0.399913;
     }
 
     public class SwerveDrive{
@@ -50,6 +53,10 @@ public class Const {
         public static final double kPThetaController = 1.0; //2.0;
         public static final double kIThetaController = 0.0;
         public static final double kDThetaController = 0.0;
+
+        //Yaw Lock PID Constants
+        public static final double yawKp = 0.17;
+        public static final double yawKi = 0.01;
 
 
         //Driver Constants

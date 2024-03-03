@@ -11,12 +11,16 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Commands.FCD;
+import frc.robot.Commands.TimedDrive;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
@@ -44,6 +48,8 @@ public class RobotContainer {
 
   private PathHandler handler;
 
+  private SendableChooser<Integer> autoChooser;
+
   public RobotContainer() {
     joy4 = new CommandXboxController(4);
     joy3 = new CommandJoystick(3);
@@ -60,10 +66,15 @@ public class RobotContainer {
 
     handler = new PathHandler(drivetrain);
 
+    autoChooser = new SendableChooser<Integer>();
+    autoChooser.setDefaultOption("Shoot", 0);
+    autoChooser.addOption("2 Piece", 1);
+    autoChooser.addOption("Testing (DO NOT USE)", 100);
+
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
-    drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
-    
+    drivetrain.resetFC(Math.PI);
+   
     configureBindings();
   }
   
@@ -79,7 +90,7 @@ public class RobotContainer {
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
-    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
 
@@ -96,10 +107,22 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-      return handler.getPath();
+      //return handler.getPath();
+      return getACG(1);
   }
 
   public void teleopInit(){
       drivetrain.setDefaultCommand(fcd);
+  }
+
+  public Command getACG(int num){
+    if (num == 1){
+      return new SequentialCommandGroup(        
+                  new TimedShintake(shintake, 0.6, 1.5, true),
+                  new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 1), 
+                                          new TimedShintake(shintake, 0.5, 1, false))
+                  /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
+    }
+    return new TimedShintake(shintake, 0.4, 2, true);
   }
 }
