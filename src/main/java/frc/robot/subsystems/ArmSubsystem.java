@@ -49,8 +49,13 @@ public class ArmSubsystem extends SubsystemBase{
         /* 
          * Motor15 faces the "reverse" direction, so invert it then set motor 5 to follow it
          * Doing this allows us to send the speed to just one and get the right motion from both
+         * 
+         * On Proto, motor 15 should be inverted
+         * On Mercury, motor 15 should NOT be inverted
+         * 
          */
         motor15.setInverted(true);
+        // motor15.setInverted(false);
         motor11.follow(motor15, true);
         
         /*
