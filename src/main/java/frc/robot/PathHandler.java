@@ -1,40 +1,54 @@
-/*import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+package frc.robot;
+
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.Const;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 
-public class SwerveDriveSubsystem extends SubsystemBase {
-    public DriveSubsystem()
+public class PathHandler {
 
-    AutoBuilder.configureHolonomic(
-        this::getRobotPose, 
-        this::resetPose, 
-        this::getRobotRelativeSpeeds, 
-        this::driveRobotRelative, 
-        new HolonomicPathFollowerConfig(
-            new PIDConstants(5.0, 0.0, 0.0),
-            new PIDConstants(5, 0.0, 0.0), 
-            4.5, 
-            0.4,
-            new ReplanningConfig()
-            ),
-() -> {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-        return alliance.get() == DriverStation.Alliance.Red;
+    //path handler implementation heavily "influenced" by 2930 Sonic Squirrels
+    private SwerveDriveSubsystem swerveDriveSubsystem;
+    private PIDConstants translationController;
+    private PIDConstants thetaController;
+    private ReplanningConfig replanningConfig;
+
+    public PathHandler(SwerveDriveSubsystem swerveDriveSubsystem)
+    {
+        this.swerveDriveSubsystem = swerveDriveSubsystem;
+
+        translationController = new PIDConstants(Const.SwerveDrive.kP, 0, 0);
+        thetaController = new PIDConstants(0, Const.SwerveDrive.kIThetaController, Const.SwerveDrive.kDThetaController);
+
+        replanningConfig = new ReplanningConfig(false, false);
     }
-    return false;
-},
-this
-    );
+
+    public Command getPath(){
+        PathPlannerPath path;
+        
+        path = PathPlannerPath.fromPathFile("New Path");
+
+        return new FollowPathHolonomic(path, 
+        swerveDriveSubsystem::getPose, 
+        swerveDriveSubsystem::getCurrSpeed, 
+        swerveDriveSubsystem::driveRC, 
+        translationController,
+        thetaController,
+        Const.SwerveDrive.MaxSpeed,
+        Const.SwerveDrive.DriveBaseRadius,
+        replanningConfig, 
+        swerveDriveSubsystem::getBool, 
+        swerveDriveSubsystem).beforeStarting(new InstantCommand(() -> swerveDriveSubsystem.tareEverything()));
+    }
+
+    
 }
-public class RobotContainer {
-    // ...
-
-    public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto");
-    }
-};*/

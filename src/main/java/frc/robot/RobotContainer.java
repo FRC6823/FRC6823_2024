@@ -1,278 +1,105 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AutoCommandGroup;
-import frc.robot.commands.FieldSpaceDrive;
-//import frc.robot.commands.LineUp;
-// import frc.robot.commands.RobotSpaceDrive;
-//import frc.robot.commands.StrafeLeft;
-//import frc.robot.commands.StrafeRight;
-// import frc.robot.subsystems.BetterShooter;
-import frc.robot.subsystems.GripperAngleSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.LiftSubsystem;
-import frc.robot.subsystems.LimeLightSubsystem;
-import frc.robot.subsystems.PneumaticSubsystem;
-import frc.robot.subsystems.PulleySubsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Commands.FCD;
+import frc.robot.Commands.TimedShintake;
+import frc.robot.Constants.Const;
+import frc.robot.Constants.TunerConstants;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
-import frc.robot.subsystems.ThrottleSubsystem;
 
 public class RobotContainer {
-    // test commit
-    public SwerveDriveSubsystem swerveDrive;
-    public Pigeon2Handler pigeon;
-    public LimeLightSubsystem limeLight;
-    public PneumaticSubsystem pneumatics;
-    public LiftSubsystem lift;
-    public PulleySubsystem pulley;
-    public GripperAngleSubsystem gripperAngle;
-    public LEDSubsystem LEDs;
-    public ThrottleSubsystem motor1;
-    // public BetterShooter shooter;
 
-    private FieldSpaceDrive fieldSpaceDriveCommand;
-    //private RobotSpaceDrive robotSpaceDriveCommand;
-    //RobotSpaceDrive is used later I don't know why it is says that it's not used
-    private PositionHandler positionHandler;
-    //private PathHandler pathHandler;
-    //private LineUp left;
-    //private LineUp right;
-    //private LineUp pickup;
+  private CommandJoystick joy3;
+  private CommandXboxController joy4;
 
-    private AutoCommandGroup auto;
+  
+  private ArmSubsystem armSubsystem;
+  private SwerveDriveSubsystem drivetrain;
+  private ShintakeSubsystem shintake;
 
-    private JoystickHandler joy3;
-    private JoystickHandler joy4;
+  private SwerveRequest.FieldCentric drive;
+  private SwerveRequest.SwerveDriveBrake brake;
+  private SwerveRequest.PointWheelsAt point;
+  private FCD fcd;
+  private Telemetry logger;
 
-    private SendableChooser<Integer> autoChooser;
+  private TimedShintake controlledReverse;
 
-    public SwerveDriveSubsystem getSwervedriveSubsystem() {
-        return swerveDrive;
+  private PathHandler handler;
+
+  public RobotContainer() {
+    joy4 = new CommandXboxController(4);
+    joy3 = new CommandJoystick(3);
+    joy3.setXChannel(0);
+    joy3.setYChannel(1);
+    joy3.setTwistChannel(5);
+
+    armSubsystem = new ArmSubsystem();
+    drivetrain = TunerConstants.DriveTrain;
+    shintake = new ShintakeSubsystem();
+
+    fcd = new FCD(drivetrain, joy3);
+    logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
+
+    handler = new PathHandler(drivetrain);
+
+    controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
+
+    drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
+    
+    configureBindings();
+  }
+  
+
+ private void configureBindings() {
+    // reset the field-centric heading on left bumper press
+    joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    //Arm Commands when button is pressed it is true and when it is released it is false 
+    // - is rasing the arm
+    joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
+    //Shintake Commands
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(joy3.getRawAxis(6)))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+    joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
+
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
+    drivetrain.registerTelemetry(logger::telemeterize);
+  }
 
-    public Pigeon2Handler getPigeon2Handler() {
-        return pigeon;
-    }
+  public void autonomousInit(){
+    drivetrain.removeDefaultCommand();
+    CommandScheduler.getInstance().cancelAll();
+  }
 
-    // public PneumaticSubsystem getPneumatics(){
-    // return pneumatics;
-    // }
+  public Command getAutonomousCommand() {
+      return handler.getPath();
+  }
 
-    // public PulleySubsystem getPulley(){
-    // return pulley;
-    // }
-
-    // public LiftSubsystem getLift(){
-    // return lift;
-    // }
-
-    // public GripperAngleSubsystem getGripperAngle(){
-    // return gripperAngle;
-    // }
-
-    public PositionHandler getPositionHandler() {
-        return positionHandler;
-    }
-
-    /*
-    public PathHandler getPathHandler() {
-        return pathHandler;
-    }
-    */
-    public RobotContainer() {
-        pigeon = new Pigeon2Handler(); // pigeon2 input
-        limeLight = new LimeLightSubsystem();
-        swerveDrive = new SwerveDriveSubsystem(pigeon, limeLight);
-        // shooter = new BetterShooter();
-        // pneumatics = new PneumaticSubsystem();
-        // lift = new LiftSubsystem();
-        // pulley = new PulleySubsystem();
-        // gripperAngle = new GripperAngleSubsystem();
-        // LEDs = new LEDSubsystem(0);
-
-        joy3 = new JoystickHandler(3);
-        joy4 = new JoystickHandler(4);
-        motor1 = new ThrottleSubsystem(12, joy3);
-
-        // Field space uses pigeon2 to get its angle
-        fieldSpaceDriveCommand = new FieldSpaceDrive(swerveDrive, joy3, pigeon);
-        //robotSpaceDriveCommand = new RobotSpaceDrive(swerveDrive, joy3);
-        swerveDrive.setDefaultCommand(fieldSpaceDriveCommand);
-
-        // left = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "left");
-        // right = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "right");
-        // pickup = new LineUp(swerveDrive, pneumatics, limeLight, pigeon, "pickup");
-
-        positionHandler = new PositionHandler(lift, pulley, gripperAngle);
-        //pathHandler = new PathHandler(swerveDrive);
-
-        autoChooser = new SendableChooser<Integer>();
-        autoChooser.setDefaultOption("Score", 1);
-        autoChooser.addOption("Score, Backup", 2);
-        autoChooser.addOption("Score, Balance", 3);
-        autoChooser.addOption("Score, Backup, Floor Pose", 4);
-        autoChooser.addOption("Score, Backup, Start Pose", 5);
-        autoChooser.addOption("Score, Start Pose", 6);
-        autoChooser.addOption("Score, Over, Balance", 7);
-        autoChooser.addOption("Path Planner", 8);
-
-        Shuffleboard.getTab("Preferences").add("Autonomous", autoChooser);
-
-        pigeon.setYaw(180);
-        pigeon.setPitchOffset(pigeon.getPitch());
-        pigeon.setRollOffset(pigeon.getRoll());
-        // fieldSpaceDriveCommand.zero();
-        configureButtonBindings();
-    }
-
-    public Command getAutoCommandGroup() {
-        auto = new AutoCommandGroup(this, autoChooser.getSelected());
-        return auto;
-    }
-
-    private void configureButtonBindings() {
-
-        //Shooter Testing Stuff
-        //joy3.button(2).whileTrue(new InstantCommand(() -> shooter.setSpeed(joy3.getAxis6())));
-
-
-
-
-        // Gripper toggle
-        // joy3.button(1).whileTrue(new InstantCommand(() ->
-        // pneumatics.togglePneumaticState()));
-
-        // Toggle yaw lock
-        //joy3.button(2).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()))
-                //.onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleOverrideYaw()));
-
-        // This will set the current orientation to be "forward" for field drive
-        joy3.button(3).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.zero()));
-
-        // This will set the current orientation to be "backward" for field drive
-        joy3.button(4).whileTrue(new InstantCommand(() -> pigeon.setYaw(180)));
-
-        // This will toggle slow mode for drive
-        joy3.button(11).whileTrue(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode()))
-                .onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.toggleSlowMode()));
-
-        // Snow plow break
-        joy3.button(6).whileTrue(new InstantCommand(() -> {
-            swerveDrive.brake();
-            fieldSpaceDriveCommand.drive(false);
-        })).onFalse(new InstantCommand(() -> fieldSpaceDriveCommand.drive(true)));
-
-        // // Move to score high on left node
-        // joy3.button(10).whileTrue(left).whileTrue(new InstantCommand(() ->
-        // positionHandler.setPose(4)));
-
-        // // Move to score low on left node
-        // joy3.button(9).whileTrue(left).whileTrue(new InstantCommand(() ->
-        // positionHandler.setPose(3)));
-
-        // // Move to score high on right node
-        // joy3.button(14).whileTrue(right).whileTrue(new InstantCommand(() ->
-        // positionHandler.setPose(4)));
-
-        // // Move to score low on right node
-        // joy3.button(13).whileTrue(right).whileTrue(new InstantCommand(() ->
-        // positionHandler.setPose(3)));
-
-        // // Pickup
-        // joy3.button(12).whileTrue(pickup).whileTrue(new InstantCommand(() -> {
-        // positionHandler.setPose(1);
-        // pneumatics.open();
-        // }));
-
-        // Soft disable for lift/arm
-        // joy4.button(5).whileTrue(new InstantCommand(() -> {
-        // pulley.disable();
-        // lift.disable();
-        // gripperAngle.disable();
-        // })).onFalse(new InstantCommand(() -> {
-        // pulley.enable();
-        // lift.enable();
-        // gripperAngle.enable();
-        // }));
-
-        // Manual control commands
-        // joy4.button(2).whileTrue(new InstantCommand(() -> {
-        // lift.setSpeed(0.2);
-        // lift.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // lift.setSpeed(0);
-        // lift.setMode(true);
-        // }));
-
-        // joy4.button(3).whileTrue(new InstantCommand(() -> {
-        // lift.setSpeed(-0.2);
-        // lift.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // lift.setSpeed(0);
-        // lift.setMode(true);
-        // }));
-
-        // joy4.button(1).whileTrue(new InstantCommand(() -> { pulley.decrement();}));
-        // joy4.button(4).whileTrue(new InstantCommand(() -> { pulley.increment();}));
-
-        // joy4.button(4).whileTrue(new InstantCommand(() -> {
-        // pulley.setSpeed(1);
-        // pulley.setMode(false);
-        // lift.setSpeed(1);
-        // lift.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // pulley.setMode(true);
-        // lift.setMode(true);
-        // }));
-
-        // joy4.button(1).whileTrue(new InstantCommand(() -> {
-        // pulley.setSpeed(-1);
-        // pulley.setMode(false);
-        // lift.setSpeed(-1);
-        // lift.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // pulley.setMode(true);
-        // lift.setMode(true);
-        // }));
-
-        // joy4.povLeft().whileTrue(new InstantCommand(() -> {
-        // gripperAngle.setSpeed(0.5);
-        // gripperAngle.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // gripperAngle.setSpeed(0);
-        // gripperAngle.setMode(true);
-        // }));
-
-        // joy4.povRight().whileTrue(new InstantCommand(() -> {
-        // gripperAngle.setSpeed(-0.5);
-        // gripperAngle.setMode(false);
-        // }))
-        // .onFalse(new InstantCommand(() -> {
-        // gripperAngle.setSpeed(0);
-        // gripperAngle.setMode(true);
-        // }));
-
-        joy4.button(6).whileTrue(new InstantCommand(() -> positionHandler.setPose(2)));
-
-        joy4.button(10).whileTrue(new InstantCommand(() -> positionHandler.setPose(5)));
-
-        // Cycling through presets
-        joy4.povUp().whileTrue(new InstantCommand(() -> {
-            positionHandler.increaseIndex();
-        })).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
-
-        joy4.povDown().whileTrue(new InstantCommand(() -> {
-            positionHandler.decreaseIndex();
-        })).whileFalse(new InstantCommand(() -> positionHandler.setPose()));
-    }
+  public void teleopInit(){
+      drivetrain.setDefaultCommand(fcd);
+  }
 }
