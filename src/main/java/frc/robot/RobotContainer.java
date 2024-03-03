@@ -5,8 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,9 +32,6 @@ public class RobotContainer {
   private SwerveDriveSubsystem drivetrain;
   private ShintakeSubsystem shintake;
 
-  private SwerveRequest.FieldCentric drive;
-  private SwerveRequest.SwerveDriveBrake brake;
-  private SwerveRequest.PointWheelsAt point;
   private FCD fcd;
   private Telemetry logger;
 
