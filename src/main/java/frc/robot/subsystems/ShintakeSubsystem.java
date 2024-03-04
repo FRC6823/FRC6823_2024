@@ -38,6 +38,8 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
         botMotor.setIdleMode(IdleMode.kCoast);
+        topMotor.setInverted(true);
+        botMotor.setInverted(true);
         topMotor.burnFlash();
         botMotor.burnFlash();  
     }

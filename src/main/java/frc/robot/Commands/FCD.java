@@ -20,6 +20,6 @@ public class FCD extends Command{
     public void execute(){
         swerve.driveFC(new ChassisSpeeds(((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed))
                             ,(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed)
-                            ,(joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxAngularRate)));
+                            ,(-joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxAngularRate)));
     }
 }

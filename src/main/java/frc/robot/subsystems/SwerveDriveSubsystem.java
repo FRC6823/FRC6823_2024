@@ -129,7 +129,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         if (yawLock){
         if (speeds.omegaRadiansPerSecond == 0){
             if (counter == 0){
-                speeds.omegaRadiansPerSecond = -yawPid.calculate(m_pigeon2.getYaw().getValueAsDouble());
+                speeds.omegaRadiansPerSecond = yawPid.calculate(m_pigeon2.getYaw().getValueAsDouble());
             }
             else   
                 counter--;
