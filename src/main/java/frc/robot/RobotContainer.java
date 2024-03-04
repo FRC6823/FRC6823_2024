@@ -74,7 +74,7 @@ public class RobotContainer {
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
 
-    drivetrain.resetFC(Math.PI);
+    drivetrain.resetFC(0);
    
     configureBindings();
   }
