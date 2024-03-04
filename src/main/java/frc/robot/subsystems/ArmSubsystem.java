@@ -162,6 +162,7 @@ SmartDashboard.putNumber("Min Output", kMinOutput);
          * To Do: May want to implement a Slew Rate Limiter for arm, put a global arm speed constant in dashboard?
          */
         armSpeed = speed * .4;
+        pidEnabled = false;
         // motor15.set(armSpeed);
     }
     

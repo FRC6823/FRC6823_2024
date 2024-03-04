@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Commands.FCD;
+import frc.robot.Commands.TargetTrackDrive;
 import frc.robot.Commands.TimedDrive;
 import frc.robot.Commands.TimedShintake;
 import frc.robot.Commands.WaitUntilPose;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
 
@@ -46,6 +48,8 @@ public class RobotContainer {
   private Telemetry logger;
 
   private TimedShintake controlledReverse;
+  private TargetTrackDrive tracking;
+  private LimeLightSubsystem ll;
 
   private PathHandler handler;
 
@@ -61,9 +65,11 @@ public class RobotContainer {
     armSubsystem = new ArmSubsystem();
     drivetrain = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
+    ll = new LimeLightSubsystem();
 
     fcd = new FCD(drivetrain, joy3);
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
+    tracking = new TargetTrackDrive(drivetrain, armSubsystem, ll, joy3);
 
     handler = new PathHandler(drivetrain);
 
@@ -91,13 +97,16 @@ public class RobotContainer {
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
-    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     
     joy3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     joy3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+
+    joy3.button(2).toggleOnTrue(tracking);
+
 
     joy4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));

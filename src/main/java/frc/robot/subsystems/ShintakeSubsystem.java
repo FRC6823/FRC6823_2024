@@ -53,7 +53,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     }
     
     public void hardStopShooter(){
-        this.speed = -0.2;
+        this.speed = -0.1;
     }
 
     public void stopShooter(){

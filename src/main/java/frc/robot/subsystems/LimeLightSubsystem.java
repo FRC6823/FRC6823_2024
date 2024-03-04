@@ -24,18 +24,18 @@ public class LimeLightSubsystem extends SubsystemBase{
     private NetworkTableEntry fid, bid;
 
     public LimeLightSubsystem(){
-        frontTable = NetworkTableInstance.getDefault().getTable("limelight-left");
+        frontTable = NetworkTableInstance.getDefault().getTable("limelight-lenny");
         backTable = NetworkTableInstance.getDefault().getTable("limelight-right");
         ftx = frontTable.getEntry("tx");
         fty = frontTable.getEntry("ty");
         //ltv = leftTable.getEntry("tv");
-        fb_t = frontTable.getEntry("botpose_targetspace");
+        fb_t = frontTable.getEntry("targetpose_robotspace");
         fid = frontTable.getEntry("tid");
 
         btx = backTable.getEntry("tx");
         bty = backTable.getEntry("ty");
         //rtv = rightTable.getEntry("tv");
-        bb_t = backTable.getEntry("botpose_targetspace");
+        bb_t = backTable.getEntry("targetpose_robotspace");
         bid = backTable.getEntry("tid");
 
         fb_f = frontTable.getEntry("botpose");
@@ -139,11 +139,8 @@ public class LimeLightSubsystem extends SubsystemBase{
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Back TX", bGet3dTX());
         SmartDashboard.putNumber("Front TX", fGet3dTX());
-        SmartDashboard.putNumber("Back TZ", bGet3dTZ());
         SmartDashboard.putNumber("Front TZ", fGet3dTZ());
-        SmartDashboard.putNumber("Back RY", bGet3dRY());
         SmartDashboard.putNumber("Front RY", fGet3dRY());
 
     }

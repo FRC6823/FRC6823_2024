@@ -7,7 +7,7 @@ public class Const {
         // Arm angles
         public static final double ZeroOffset = 0.4772015;
         public static final double UP_ANGLE = 0.58926248550415;
-        public static final double DOWN_ANGLE = 0.376505047082901+0.001;
+        public static final double DOWN_ANGLE = 0.376505047082901;
 
         // PID coefficients
         public static final double kP = 20;//5e-5;
