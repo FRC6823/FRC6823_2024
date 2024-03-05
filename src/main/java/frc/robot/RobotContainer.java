@@ -97,14 +97,13 @@ public class RobotContainer {
     // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
     //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
     //Shintake Commands
-    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
-    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+    joy3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
+    joy3.button(1).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     
     joy3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     joy3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-
     joy3.button(2).toggleOnTrue(tracking);
 
 
