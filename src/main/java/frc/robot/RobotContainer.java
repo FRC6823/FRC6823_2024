@@ -50,6 +50,7 @@ public class RobotContainer {
   private TimedShintake controlledReverse;
   private TargetTrackDrive tracking;
   private LimeLightSubsystem ll;
+  private Blinkin lights;
 
   private PathHandler handler;
 
@@ -66,6 +67,7 @@ public class RobotContainer {
     drivetrain = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
     ll = new LimeLightSubsystem();
+    lights = new Blinkin();
 
     fcd = new FCD(drivetrain, joy3);
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
@@ -107,12 +109,14 @@ public class RobotContainer {
 
     joy3.button(2).toggleOnTrue(tracking);
 
+    
 
     joy4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     joy4.button(1).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     joy4.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
 
+    lights.lightsNormal();
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
