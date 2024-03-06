@@ -1,4 +1,4 @@
-/*package frc.robot.subsystems;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -14,10 +14,35 @@ public class ClimberSubsystem extends SubsystemBase{
         motor20 = new CANSparkMax(20, MotorType.kBrushed);
         motor21 = new CANSparkMax(21, MotorType.kBrushed);
         climberSpeed = 0;
-
-        public void setExtendSpeed(double climberSpeed) {
-            this.climberSpeed = climberSpeed;
-
-        }
     }
-}*/
+    public void setExtendSpeed20(double climberSpeed) {
+            this.climberSpeed = climberSpeed;
+            motor20.set(climberSpeed);
+
+    }
+    public void setExtendSpeed21(double climberSpeed) {
+            this.climberSpeed = climberSpeed;
+            motor21.set(climberSpeed);
+
+    }
+
+    public void setRetractSpeed20(double climberSpeed) {
+        this.climberSpeed = climberSpeed;
+        motor20.set(climberSpeed);
+
+    }
+
+    public void setRetractSpeed21(double climberSpeed) {
+        this.climberSpeed = climberSpeed;
+        motor21.set(climberSpeed);
+
+    }
+
+    public void stopClimber20() {
+        motor20.stopMotor();
+    }
+
+    public void stopClimber2q() {
+        motor21.stopMotor();
+    }
+}
