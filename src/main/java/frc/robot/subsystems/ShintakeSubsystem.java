@@ -51,7 +51,10 @@ public class ShintakeSubsystem extends SubsystemBase {
          */
         this.speed = (speed);
     }
-    
+    public void stopIntake(){
+        this.intakespeed = 0;
+    }
+
     public void hardStopShooter(){
         this.speed = -0.1;
     }
