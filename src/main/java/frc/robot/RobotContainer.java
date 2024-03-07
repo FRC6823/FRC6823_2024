@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.time.Instant;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -83,7 +85,7 @@ public class RobotContainer {
     autoChooser.addOption("2 Piece", 1);
     autoChooser.addOption("Testing (DO NOT USE)", 100);
 
-    controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false);
+    controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false, false);
 
     drivetrain.resetFC(0);
    
@@ -107,23 +109,16 @@ public class RobotContainer {
     
     //Arm controls
     gamepad4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-gamepad4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
-    //joy4.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    //joy4.button(7).onTrue(new InstantCommand(() -> armSubsystem.stop()));
-    //joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    //joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-
-    //Climber controls
-    //gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-gamepad4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
-    //gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-gamepad4.getRawAxis(2), -gamepad4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
-     //.onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-joy4.getRawAxis(2), -joy4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop()));
     
     gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, true))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
     gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, false))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
 
-    gamepad4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
-    gamepad4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
-    gamepad4.button(1).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+    gamepad4.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
+    gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+    gamepad4.axisGreaterThan(2,0.5).onTrue(new TimedShintake(shintake, 0.5, 0.5, false, true)).onFalse(controlledReverse);
+    gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.80))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    gamepad4.button(3).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.stopIntake()));
 
     //new InstantCommand(() -> lights.lightsNormal());
 
@@ -152,13 +147,19 @@ public class RobotContainer {
       return new SequentialCommandGroup(
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
                   new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true),
+                  new TimedShintake(shintake, 0.6, 1.5, true, false),
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)),
                   new WaitUntilPose(armSubsystem),
                   new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 1), 
-                                          new TimedShintake(shintake, 0.5, 1, false))
+                                          new TimedShintake(shintake, 0.5, 1, false, false))
                   /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
     }
-    return new TimedShintake(shintake, 0.4, 2, true);
+
+    /*if (num == 2){
+      return new SequentialCommandGroup(
+                  tracking,
+                  new TimedShintake(shintake, 0.6, 1.5, true, false));
+    }*/
+    return new TimedShintake(shintake, 0.4, 2, true, false);
   }
 }

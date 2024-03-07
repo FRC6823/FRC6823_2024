@@ -9,13 +9,15 @@ public class TimedShintake extends Command{
     private Timer timer;
     private double speed, time, counter;
     private boolean shoot;
+    private boolean reverseShoot;
 
-    public TimedShintake(ShintakeSubsystem shintake, double speed, double time, boolean shoot){
+    public TimedShintake(ShintakeSubsystem shintake, double speed, double time, boolean shoot, boolean reverseShoot){
         this.shintake = shintake;
         timer = new Timer();
         this.speed = speed;
         this.time = time;
         this.shoot = shoot;
+        this.reverseShoot  = reverseShoot;
         addRequirements(shintake);
     }
 
@@ -27,6 +29,9 @@ public class TimedShintake extends Command{
         if (shoot){
             shintake.setShootSpeed(speed);
             counter = 40;
+        }
+        if (reverseShoot){
+            shintake.setShootSpeed((-speed) * 0.2);
         }
         else{
             shintake.setIntakeSpeed(speed);
