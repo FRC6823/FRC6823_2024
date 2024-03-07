@@ -117,8 +117,8 @@ public class RobotContainer {
     //gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-gamepad4.getRawAxis(2), -gamepad4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
      //.onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-joy4.getRawAxis(2), -joy4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop()));
     
-    gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(0.5))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
-    gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(0.5, 0.5))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
+    gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, true))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
+    gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, false))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
 
     gamepad4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     gamepad4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
