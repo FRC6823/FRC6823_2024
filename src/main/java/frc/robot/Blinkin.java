@@ -1,4 +1,4 @@
-package frc.robot;
+/*package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
@@ -13,4 +13,4 @@ public class Blinkin {
 	public void lightsNormal() {
 		blinkin.set(0.93);
 	}
-}
+}*/

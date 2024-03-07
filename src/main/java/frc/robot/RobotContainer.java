@@ -52,7 +52,7 @@ public class RobotContainer {
   private TimedShintake controlledReverse;
   private TargetTrackDrive tracking;
   private LimeLightSubsystem ll;
-  private Blinkin lights;
+  //private Blinkin lights;
 
   private PathHandler handler;
 
@@ -69,7 +69,7 @@ public class RobotContainer {
     drivetrain = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
     ll = new LimeLightSubsystem();
-    lights = new Blinkin();
+    //lights = new Blinkin();
     climberSubsystem = new ClimberSubsystem();
 
     fcd = new FCD(drivetrain, hotas3);
@@ -125,7 +125,7 @@ public class RobotContainer {
     gamepad4.button(1).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
 
-    new InstantCommand(() -> lights.lightsNormal());
+    //new InstantCommand(() -> lights.lightsNormal());
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
