@@ -31,7 +31,7 @@ public class TimedShintake extends Command{
             counter = 40;
         }
         else if (reverseShoot){
-            shintake.setShootSpeed((-speed) * 0.2);
+            shintake.setShootSpeed(speed * 0.2);
             counter = 40;
         }
         else{
