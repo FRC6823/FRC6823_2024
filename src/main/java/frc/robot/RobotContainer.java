@@ -155,11 +155,11 @@ public class RobotContainer {
                   /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
     }
 
-    if (num == 2){
+    /*if (num == 2){
       return new SequentialCommandGroup(
                   tracking,
                   new TimedShintake(shintake, 0.6, 1.5, true, false));
-    }
+    }*/
     return new TimedShintake(shintake, 0.4, 2, true, false);
   }
 }
