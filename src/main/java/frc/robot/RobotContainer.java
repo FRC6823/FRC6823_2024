@@ -96,6 +96,9 @@ public class RobotContainer {
  private void configureBindings() {
     // reset the field-centric heading on left bumper press
     hotas3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    hotas3.button(9).onTrue(new InstantCommand(() -> armSubsystem.set(0.3))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
+    hotas3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set(-0.3))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
  
     //Shintake Commands
     hotas3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((hotas3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
@@ -116,7 +119,7 @@ public class RobotContainer {
     gamepad4.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    gamepad4.axisGreaterThan(2,0.5).onTrue(new TimedShintake(shintake, 0.5, 0.5, false, true)).onFalse(controlledReverse);
+    gamepad4.axisGreaterThan(2,0.5).onTrue(new TimedShintake(shintake, -0.5, 0.5, false, true)).onFalse(controlledReverse);
     gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.80))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     gamepad4.button(3).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.stopIntake()));
 
@@ -145,6 +148,7 @@ public class RobotContainer {
   public Command getACG(int num){
     if (num == 1){
       return new SequentialCommandGroup(
+                  new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
                   new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true, false),

@@ -28,7 +28,7 @@ public class TargetTrackDrive extends Command{
         x = 0;
         y = 0;
         a = -0.2218;
-        b = 0.4875;
+        b = 0.4375;
         c = -0.9618;
         SmartDashboard.putNumber("a", a);
         SmartDashboard.putNumber("b", b);
