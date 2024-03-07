@@ -27,6 +27,7 @@ import frc.robot.Commands.WaitUntilPose;
 import frc.robot.Constants.Const;
 import frc.robot.Constants.TunerConstants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.ShintakeSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -40,6 +41,7 @@ public class RobotContainer {
   private ArmSubsystem armSubsystem;
   private SwerveDriveSubsystem drivetrain;
   private ShintakeSubsystem shintake;
+  private ClimberSubsystem climberSubsystem;
 
   private SwerveRequest.FieldCentric drive;
   private SwerveRequest.SwerveDriveBrake brake;
@@ -68,6 +70,7 @@ public class RobotContainer {
     shintake = new ShintakeSubsystem();
     ll = new LimeLightSubsystem();
     lights = new Blinkin();
+    climberSubsystem = new ClimberSubsystem();
 
     fcd = new FCD(drivetrain, joy3);
     logger = new Telemetry(Const.SwerveDrive.MaxSpeed);
@@ -91,13 +94,7 @@ public class RobotContainer {
  private void configureBindings() {
     // reset the field-centric heading on left bumper press
     joy3.button(3).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
-    //Arm Commands when button is pressed it is true and when it is released it is false 
-    // - is rasing the arm
-    joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    // joy3.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
-    //joy3.button(7).onTrue(new InstantCommand()) -> armSubsystem.goToAngle(0, 0);
+ 
     //Shintake Commands
     joy3.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed((joy3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
     joy3.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
@@ -106,17 +103,27 @@ public class RobotContainer {
     joy3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     joy3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-
-    joy3.button(2).toggleOnTrue(tracking);
-
     
+    joy3.button(2).toggleOnTrue(tracking);
+    
+    //Arm controls
+    joy4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-joy4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
+    //joy4.button(7).onTrue(new InstantCommand(() -> armSubsystem.set(-joy3.getRawAxis(2)))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    //joy4.button(7).onTrue(new InstantCommand(() -> armSubsystem.stop()));
+    //joy3.button(13).onTrue(new InstantCommand(() -> armSubsystem.set(0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+    //joy3.button(14).onTrue(new InstantCommand(() -> armSubsystem.set(-0.5))).onFalse(new InstantCommand(() -> armSubsystem.set(0)));
+
+    //Climber controls
+    joy4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-joy4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
+    joy4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-joy4.getRawAxis(2), -joy4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
+     //.onTrue(new InstantCommand(() -> climberSubsystem.setExtendSpeed(-joy4.getRawAxis(2), -joy4.getRawAxis(5)))).onFalse(new InstantCommand(() -> climberSubsystem.stop()));
 
     joy4.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     joy4.button(2).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     joy4.button(1).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    joy4.button(6).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+    joy4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
 
-    lights.lightsNormal();
+    new InstantCommand(() -> lights.lightsNormal());
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));

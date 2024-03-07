@@ -80,5 +80,11 @@ public class Const {
         
     }
 
+    public class ClimberSubsystem {
+        //These are both placeholders, finding actual min and max is VERY IMPORTANT
+        public static final double extentionMIN = -0.5;
+        public static final double extentionMAX = -95; 
+    }
+
     public static final double[] startingScorePose = new double[] {0.3, -90};
 }
