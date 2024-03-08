@@ -5,14 +5,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class ClimberSubsystem extends SubsystemBase{
     //motor 20 is right blue 
     //motor 21 is left yellow
     private CANSparkMax motor20;
     private CANSparkMax motor21;
-    private CommandXboxController gamepad4;
+    private CommandPS5Controller gamepad4;
     private boolean isEnabled;
     private boolean tandemMode;
 
@@ -35,7 +35,7 @@ public class ClimberSubsystem extends SubsystemBase{
             this.l_yellowClimberSpeed = lb_ClimberSpeed;
     } */
 
-    public void setEnabled(CommandXboxController gamepad4, boolean tandemMode){
+    public void setEnabled(CommandPS5Controller gamepad4, boolean tandemMode){
         isEnabled = true;
         this.gamepad4 = gamepad4;
         this.tandemMode = tandemMode;

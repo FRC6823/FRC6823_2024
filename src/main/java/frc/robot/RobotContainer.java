@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Commands.FCD;
 import frc.robot.Commands.TargetTrackDrive;
@@ -37,7 +37,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem;
 public class RobotContainer {
 
   private CommandJoystick hotas3;
-  private CommandXboxController gamepad4;
+  private CommandPS5Controller gamepad4;
 
   
   private ArmSubsystem armSubsystem;
@@ -61,7 +61,7 @@ public class RobotContainer {
   private SendableChooser<Integer> autoChooser;
 
   public RobotContainer() {
-    gamepad4 = new CommandXboxController(5);
+    gamepad4 = new CommandPS5Controller(5);
     hotas3 = new CommandJoystick(3);
     hotas3.setXChannel(0);
     hotas3.setYChannel(1);
