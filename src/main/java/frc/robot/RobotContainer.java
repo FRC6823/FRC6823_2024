@@ -120,7 +120,7 @@ public class RobotContainer {
     gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(controlledReverse);
-    gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.stop()));
+    gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1)));
     gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.80))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     gamepad4.button(3).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.stopIntake()));
 
