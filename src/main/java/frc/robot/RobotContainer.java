@@ -13,6 +13,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -87,6 +88,8 @@ public class RobotContainer {
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false, false);
 
+    Shuffleboard.getTab("Preferences").add("Autonomus", autoChooser);
+
     drivetrain.resetFC(0);
    
     configureBindings();
@@ -139,7 +142,8 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
       //return handler.getPath();
-      return getACG(2);
+      //return getACG(2);
+      return getACG(autoChooser.getSelected());
   }
 
   public void teleopInit(){
