@@ -20,9 +20,9 @@ public class Const {
         public static final double kIz = 0;
         public static final double kFF2 = 0.000156; 
         public static final double kFF = 0.000156; 
-        public static final double kMaxOutput = 0.8; 
+        public static final double kMaxOutput = 1; 
         public static final double kMaxOutput2 = 1;
-        public static final double kMinOutput = -0.8;
+        public static final double kMinOutput = -1;
         public static final double kMinOutput2 = -1;
         public static final double maxRPM2 = 5676;
         public static final double maxRPM = 5676;

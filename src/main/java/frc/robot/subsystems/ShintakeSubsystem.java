@@ -74,8 +74,8 @@ public class ShintakeSubsystem extends SubsystemBase {
     }*/
 
     public void periodic() {
-        topMotor.set(speed);
-        botMotor.set(speed);
+        topMotor.set(-speed);
+        botMotor.set(-speed);
         
        SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
            //if (inputBeamBreak.getValue()) {

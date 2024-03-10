@@ -139,32 +139,34 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
       //return handler.getPath();
-      return getACG(1);
+      return getACG(2);
   }
 
   public void teleopInit(){
       drivetrain.setDefaultCommand(fcd);
+      drivetrain.resetFC(0);
   }
 
   public Command getACG(int num){
     if (num == 1){
       return new SequentialCommandGroup(
-                  new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
+                  //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
                   new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true, false),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)),
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
                   new WaitUntilPose(armSubsystem),
-                  new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 1), 
-                                          new TimedShintake(shintake, 0.5, 1, false, false))
+                  new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
+                                          new TimedShintake(shintake, 0.5, 3, false, false))
                   /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
     }
 
-    /*if (num == 2){
+    if (num == 2){
       return new SequentialCommandGroup(
-                  tracking,
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
+                  new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true, false));
-    }*/
+    }
     return new TimedShintake(shintake, 0.4, 2, true, false);
   }
 }
