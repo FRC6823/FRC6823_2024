@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +21,9 @@ public class ClimberSubsystem extends SubsystemBase{
         motor20 = new CANSparkMax(20, MotorType.kBrushed);
         motor21 = new CANSparkMax(21, MotorType.kBrushed);
         tandemMode = true;
+
+        motor20.setIdleMode(IdleMode.kBrake);
+        motor21.setIdleMode(IdleMode.kBrake);
         
     }
 
@@ -51,12 +55,12 @@ public class ClimberSubsystem extends SubsystemBase{
     public void periodic() {
         if ( isEnabled == true){
             if (tandemMode == false){
-                motor20.set((-gamepad4.getRawAxis(1)) * 0.5);
-                motor21.set((gamepad4.getRawAxis(5)) * 0.5);
+                motor20.set((-gamepad4.getRawAxis(1)) * 1);
+                motor21.set((gamepad4.getRawAxis(5)) * 1);
             }
             if (tandemMode == true) {
-                motor20.set((-gamepad4.getRawAxis(5)) * 0.5);
-                motor21.set((gamepad4.getRawAxis(5)) * 0.5);
+                motor20.set((-gamepad4.getRawAxis(5)) * 1);
+                motor21.set((gamepad4.getRawAxis(5)) * 1);
             }
         }
         else{
