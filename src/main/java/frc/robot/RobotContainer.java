@@ -55,7 +55,7 @@ public class RobotContainer {
   private TimedShintake controlledReverse;
   private TargetTrackDrive tracking;
   private LimeLightSubsystem ll;
-  //private Blinkin lights;
+  private Blinkin lights;
 
   private PathHandler handler;
 
@@ -72,7 +72,7 @@ public class RobotContainer {
     drivetrain = TunerConstants.DriveTrain;
     shintake = new ShintakeSubsystem();
     ll = new LimeLightSubsystem();
-    //lights = new Blinkin();
+    lights = new Blinkin(9);
     climberSubsystem = new ClimberSubsystem();
 
     fcd = new FCD(drivetrain, hotas3);
@@ -105,13 +105,13 @@ public class RobotContainer {
  
     //Shintake Commands
     hotas3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((hotas3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
-    hotas3.button(1).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
+    //hotas3.button(1).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     
     hotas3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     hotas3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     hotas3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    hotas3.button(2).toggleOnTrue(tracking);
+    hotas3.button(1).whileTrue(tracking);
     
     //Arm controls
     gamepad4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-gamepad4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
@@ -124,10 +124,12 @@ public class RobotContainer {
     gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(controlledReverse);
     gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1)));
-    gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.80))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.8))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
+    gamepad4.button(2).onTrue(new InstantCommand(() -> shintake.setShootSpeed(1))).onFalse(new InstantCommand(() -> shintake.stop()));
     gamepad4.button(3).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.stopIntake()));
+    gamepad4.button(4).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.3))).onFalse(new InstantCommand(() -> shintake.stop()));
 
-    //new InstantCommand(() -> lights.lightsNormal());
+    new InstantCommand(() -> lights.lightsNormal());
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
