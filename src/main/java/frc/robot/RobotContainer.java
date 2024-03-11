@@ -111,7 +111,7 @@ public class RobotContainer {
     hotas3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     hotas3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     hotas3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    hotas3.button(2).toggleOnTrue(tracking);
+    hotas3.button(2).whileTrue(tracking).whileFalse(new InstantCommand(() -> drivetrain.resetFC(0)));
     
     //Arm controls
     gamepad4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-gamepad4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
