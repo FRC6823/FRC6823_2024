@@ -38,6 +38,7 @@ public class Const {
         
         //Positional Constants
         public static final double subwooferShot = 0.399913;
+        public static final double ampShot = 0.6231921; //placeholder
     }
 
     public class SwerveDrive{

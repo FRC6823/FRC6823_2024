@@ -113,8 +113,9 @@ public class RobotContainer {
     /*
      * Arm Presets (Hotas)
      */
-    hotas3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
-    hotas3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    hotas3.povLeft().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
+    hotas3.povUp().onTrue(new InstantCommand(()->armSubsystem.goToAngle(Const.Arm.ampShot)));
+    hotas3.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     hotas3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     
     /*
