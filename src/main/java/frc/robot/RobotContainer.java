@@ -103,33 +103,65 @@ public class RobotContainer {
     hotas3.button(9).onTrue(new InstantCommand(() -> armSubsystem.set(0.3))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
     hotas3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set(-0.3))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
  
-    //Shintake Commands
+    /*
+     * Shintake Commands (hotas)
+     */
     hotas3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((hotas3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.stop()));
     //hotas3.button(1).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     
+    /*
+     * Arm Presets (Hotas)
+     */
     hotas3.button(4).onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     hotas3.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     hotas3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+    
+    /*
+     * Speaker shot line-up (hotas)
+     */
     hotas3.button(1).whileTrue(tracking);
     
-    //Arm controls
+    /*
+     * Arm controls (gamepad)
+     */
     gamepad4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-gamepad4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
-    
-    gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, true))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //tandem
-    gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, false))).onFalse(new InstantCommand(() -> climberSubsystem.stop())); //independent
-
     gamepad4.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
     gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
     gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
-    gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(controlledReverse);
-    gamepad4.axisGreaterThan(2,0.5).onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1)));
+    
+    /*
+     * Climber controls (gamepad)
+     */
+    // tandem climber mode:
+    gamepad4.button(6).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, true))).onFalse(new InstantCommand(() -> climberSubsystem.stop()));
+    // independent climber control:
+    gamepad4.axisGreaterThan(3, 0.5).onTrue(new InstantCommand(() -> climberSubsystem.setEnabled(gamepad4, false))).onFalse(new InstantCommand(() -> climberSubsystem.stop()));
+
+    
+    /*
+     * Shintake controls (gamepad) 
+     */
+    
+    /*
+     * Intake while running shooter backwards (to stop notes).
+     * Once done, reverse intake briefly so the note isn't touching the shooter
+     */
+    gamepad4.axisGreaterThan(2, 0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3)))
+                                    .onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1)))
+                                    .onFalse(controlledReverse);
+
     gamepad4.button(1).onTrue(new InstantCommand(() -> shintake.setShootSpeed(0.8))).onFalse(new InstantCommand(() -> shintake.stopShooter()));
     gamepad4.button(2).onTrue(new InstantCommand(() -> shintake.setShootSpeed(1))).onFalse(new InstantCommand(() -> shintake.stop()));
     gamepad4.button(3).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3))).onFalse(new InstantCommand(() -> shintake.stopIntake()));
     gamepad4.button(4).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.3))).onFalse(new InstantCommand(() -> shintake.stop()));
 
-    new InstantCommand(() -> lights.lightsNormal());
+    /*
+     * This seems like both the wrong place to put this light code and also the wrong way to run that method
+     * Most likely, we either want to pre-define a few commands, or we should have a LEDSubsytem to which other subsystems can send requests
+     *    both of which would then be triggered upon events
+     */ 
+     //new InstantCommand(() -> lights.lightsNormal());
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
