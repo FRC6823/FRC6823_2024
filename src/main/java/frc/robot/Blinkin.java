@@ -1,16 +1,16 @@
-/*package frc.robot;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class Blinkin {
 	
-	Spark blinkin;
+	private Spark blinkin;
 
-	public Blinkin() {
-		blinkin = new Spark(9);
+	public Blinkin(int PWM) {
+		blinkin = new Spark(PWM);
 	}
 
 	public void lightsNormal() {
 		blinkin.set(0.93);
 	}
-}*/
+}
