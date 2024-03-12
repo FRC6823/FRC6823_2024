@@ -37,8 +37,8 @@ public class Const {
         public static final double allowedErr = 0;
         
         //Positional Constants
-        public static final double subwooferShot = 0.399913;
-        public static final double ampShot = 0.6231921; //placeholder
+        public static final double SPEAKER_SHOT = 0.399913;
+        public static final double AMP_SHOT = 0.6231921; //placeholder
     }
 
     public class SwerveDrive{
