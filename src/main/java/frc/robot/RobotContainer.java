@@ -82,8 +82,8 @@ public class RobotContainer {
     handler = new PathHandler(drivetrain);
 
     autoChooser = new SendableChooser<Integer>();
-    autoChooser.setDefaultOption("Shoot", 0);
-    autoChooser.addOption("2 Piece", 1);
+    autoChooser.setDefaultOption("Shoot", 1);
+    autoChooser.addOption("Shoot & Move back", 2);
     autoChooser.addOption("Testing (DO NOT USE)", 100);
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false, false);
@@ -104,7 +104,7 @@ public class RobotContainer {
     hotas3.button(10).onTrue(new InstantCommand(() -> armSubsystem.set(-0.3))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
  
     //Shintake Commands
-    hotas3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((hotas3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.hardStopShooter()));
+    hotas3.button(6).onTrue(new InstantCommand(() -> shintake.setShootSpeed((hotas3.getRawAxis(6)+1)/2))).onFalse(new InstantCommand(() -> shintake.stop()));
     //hotas3.button(1).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(.3))).onFalse(controlledReverse);
     //joy3.povUp().onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(-0.1))).onFalse(new InstantCommand(() -> shintake.setIntakeSpeed(0)));
     
@@ -150,11 +150,24 @@ public class RobotContainer {
 
   public void teleopInit(){
       drivetrain.setDefaultCommand(fcd);
-      drivetrain.resetFC(0);
+      //drivetrain.resetFC(0);
   }
 
   public Command getACG(int num){
+    
     if (num == 1){
+      /*
+       * Shoot
+       */
+      return new SequentialCommandGroup(
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
+                  new WaitUntilPose(armSubsystem),
+                  new TimedShintake(shintake, 0.6, 1.5, true, false));
+    }
+    else if (num == 2){
+      /*
+       * Shoot & move back
+       */
       return new SequentialCommandGroup(
                   //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
@@ -166,13 +179,11 @@ public class RobotContainer {
                                           new TimedShintake(shintake, 0.5, 3, false, false))
                   /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
     }
-
-    if (num == 2){
-      return new SequentialCommandGroup(
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false));
+    else{
+      /*
+       * Shoot at the ground!?!?
+       */
+      return new TimedShintake(shintake, 0.4, 2, true, false);
     }
-    return new TimedShintake(shintake, 0.4, 2, true, false);
   }
 }
