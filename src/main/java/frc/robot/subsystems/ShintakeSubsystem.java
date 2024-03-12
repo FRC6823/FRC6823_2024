@@ -6,9 +6,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogTrigger;
+import edu.wpi.first.wpilibj.AnalogTriggerOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
@@ -20,10 +19,8 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
-    //private DigitalInput inputBeamBreak;
-    //private DigitalInput shooterBeamBreak;
-    //private AnalogTrigger inputBeamBreak;
-    private AnalogInput inputBeamBreak;
+    private AnalogTrigger beamBreak;
+    private AnalogTriggerOutput noteReady;
 
 
     public ShintakeSubsystem() {
@@ -31,9 +28,6 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor = new CANSparkMax(12, MotorType.kBrushless);
         intakeMotor = new CANSparkMax(16, MotorType.kBrushless);
         joy3 = new CommandJoystick(3);
-        //inputBeamBreak = new DigitalInput(0);
-        //inputBeamBreak = new AnalogTrigger(0);
-        inputBeamBreak = new AnalogInput(0);
         topMotor.restoreFactoryDefaults();
         botMotor.restoreFactoryDefaults();
         topMotor.setIdleMode(IdleMode.kCoast);
@@ -42,6 +36,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.setInverted(true);
         topMotor.burnFlash();
         botMotor.burnFlash();  
+
+        beamBreak = new AnalogTrigger(0);
+        beamBreak.setAveraged(true);
+        beamBreak.setLimitsRaw(0,100);
+        noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+
     }
 
     public void setShootSpeed(double speed) {
@@ -68,21 +68,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.intakespeed = intakespeed;
     }
 
-    /*public boolean getinputBeamBreak() { //not currently used
-        //return if beam is broken
-        return inputBeamBreak.get();
-    }*/
-
     public void periodic() {
         topMotor.set(-speed);
         botMotor.set(-speed);
-        
-       SmartDashboard.putNumber("BeamBreak", inputBeamBreak.getValue()); //putNumber for testing, putBoolean when analogtrigger or digital input
-           //if (inputBeamBreak.getValue()) {
-                //intakeMotor.set(0);   
-            //} else {
-                intakeMotor.set(intakespeed); 
-            //}  
+        intakeMotor.set(intakespeed); 
+
+        SmartDashboard.putBoolean("Note Ready", noteReady.get());
     }
 
     public void stop() {
