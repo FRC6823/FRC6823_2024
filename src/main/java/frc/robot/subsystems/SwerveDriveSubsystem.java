@@ -126,18 +126,22 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         SmartDashboard.putNumber("ypose", m_odometry.getEstimatedPosition().getY());
         SmartDashboard.putNumber("thetapose", m_odometry.getEstimatedPosition().getRotation().getRadians());
 
+        
+        /*
+         * Seriously, Will?
+         */
         if (yawLock){
-        if (speeds.omegaRadiansPerSecond == 0){
-            if (counter == 0){
-                speeds.omegaRadiansPerSecond = yawPid.calculate(m_pigeon2.getYaw().getValueAsDouble());
+            if (speeds.omegaRadiansPerSecond == 0){
+                if (counter == 0){
+                    speeds.omegaRadiansPerSecond = yawPid.calculate(m_pigeon2.getYaw().getValueAsDouble());
+                }
+                else   
+                    counter--;
             }
-            else   
-                counter--;
-        }
-        else{
-            yawPid.setSetpoint(m_pigeon2.getYaw().getValueAsDouble());
-            counter = 30;
-        }
+            else{
+                yawPid.setSetpoint(m_pigeon2.getYaw().getValueAsDouble());
+                counter = 30;
+            }
         }
 
 

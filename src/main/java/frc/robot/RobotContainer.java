@@ -114,8 +114,8 @@ public class RobotContainer {
      * Arm Presets (Hotas)
      */
     hotas3.povLeft().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
-    hotas3.povUp().onTrue(new InstantCommand(()->armSubsystem.goToAngle(Const.Arm.ampShot)));
-    hotas3.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    hotas3.povUp().onTrue(new InstantCommand(()->armSubsystem.goToAngle(Const.Arm.AMP_SHOT)));
+    hotas3.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)));
     hotas3.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
     
     /*
@@ -127,9 +127,10 @@ public class RobotContainer {
      * Arm controls (gamepad)
      */
     gamepad4.button(5).onTrue(new InstantCommand(() -> armSubsystem.set(-gamepad4.getRawAxis(1)))).onFalse(new InstantCommand(() -> armSubsystem.stop()));
-    gamepad4.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
-    gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)));
+    gamepad4.povLeft().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)));
+    gamepad4.povRight().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)));
     gamepad4.povDown().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)));
+    gamepad4.povUp().onTrue(new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.AMP_SHOT)));
     
     /*
      * Climber controls (gamepad)
@@ -193,7 +194,7 @@ public class RobotContainer {
        * Shoot
        */
       return new SequentialCommandGroup(
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
                   new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true, false));
     }
@@ -203,7 +204,7 @@ public class RobotContainer {
        */
       return new SequentialCommandGroup(
                   //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.subwooferShot)),
+                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
                   new WaitUntilPose(armSubsystem),
                   new TimedShintake(shintake, 0.6, 1.5, true, false),
                   new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
