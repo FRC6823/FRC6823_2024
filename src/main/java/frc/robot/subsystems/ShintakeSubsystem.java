@@ -73,7 +73,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.set(-speed);
         intakeMotor.set(intakespeed); 
 
-        SmartDashboard.putBoolean("Note Ready", noteReady.get());
+        SmartDashboard.putBoolean("Note Ready", !noteReady.get());
     }
 
     public void stop() {
