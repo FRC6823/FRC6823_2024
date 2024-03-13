@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.AnalogTriggerOutput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -25,19 +26,20 @@ public class ShintakeSubsystem extends SubsystemBase {
     private double speed;
     private double intakespeed;
     private CommandJoystick joy3;
+    private AnalogInput beamValue;
     private AnalogTrigger beamBreak;
     private AnalogTriggerOutput noteReady;
     private ShuffleboardTab preferences = Shuffleboard.getTab("Preferences");
     private int upperBeamRange = 
-        (int) preferences.add("Upper beam range", 800)
+        (int) preferences.add("Upper beam range", 900)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min",0,"max",4000))
-            .getEntry().getInteger(800);
+            .getEntry().getInteger(900);
     private int lowerBeamRange = 
         (int)preferences.add("Lower beam range", 0)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min",0,"max",4000))
-            .getEntry().getInteger(800);
+            .getEntry().getInteger(0);
 
     public ShintakeSubsystem() {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
@@ -53,10 +55,12 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.burnFlash();
         botMotor.burnFlash();
 
-        beamBreak = new AnalogTrigger(0);
+        beamValue = new AnalogInput(0);
+        beamBreak = new AnalogTrigger(beamValue);
         beamBreak.setAveraged(true);
         beamBreak.setLimitsRaw(lowerBeamRange,upperBeamRange);
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
+        SmartDashboard.putNumber("Beamvalue", beamValue.getAverageValue());
 
     }
 
@@ -90,8 +94,10 @@ public class ShintakeSubsystem extends SubsystemBase {
         botMotor.set(-speed);
         intakeMotor.set(intakespeed); 
 
-        upperBeamRange = (int)SmartDashboard.getNumber("Upper beam range", 800);
-        lowerBeamRange = (int)SmartDashboard.getNumber("Lower beam range", 600);
+        SmartDashboard.putNumber("Beamvalue", beamValue.getAverageValue());
+        
+        //upperBeamRange = (int)SmartDashboard.getNumber("Upper beam range", 800);
+        //lowerBeamRange = (int)SmartDashboard.getNumber("Lower beam range", 600);
 
         beamBreak.setLimitsRaw(lowerBeamRange, upperBeamRange);
 
