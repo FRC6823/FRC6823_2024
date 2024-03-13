@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+
+import java.util.Map;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
@@ -8,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Const;
 import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.AnalogTriggerOutput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
@@ -21,7 +27,17 @@ public class ShintakeSubsystem extends SubsystemBase {
     private CommandJoystick joy3;
     private AnalogTrigger beamBreak;
     private AnalogTriggerOutput noteReady;
-
+    private ShuffleboardTab preferences = Shuffleboard.getTab("Preferences");
+    private int upperBeamRange = 
+        (int) preferences.add("Upper beam range", 800)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min",0,"max",4000))
+            .getEntry().getInteger(800);
+    private int lowerBeamRange = 
+        (int)preferences.add("Lower beam range", 0)
+        .withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min",0,"max",4000))
+            .getEntry().getInteger(800);
 
     public ShintakeSubsystem() {
         topMotor= new CANSparkMax(14, MotorType.kBrushless);
@@ -35,11 +51,11 @@ public class ShintakeSubsystem extends SubsystemBase {
         topMotor.setInverted(true);
         botMotor.setInverted(true);
         topMotor.burnFlash();
-        botMotor.burnFlash();  
+        botMotor.burnFlash();
 
         beamBreak = new AnalogTrigger(0);
         beamBreak.setAveraged(true);
-        beamBreak.setLimitsRaw(600,800);
+        beamBreak.setLimitsRaw(lowerBeamRange,upperBeamRange);
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
     }
@@ -68,10 +84,16 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.intakespeed = intakespeed;
     }
 
+
     public void periodic() {
         topMotor.set(-speed);
         botMotor.set(-speed);
         intakeMotor.set(intakespeed); 
+
+        upperBeamRange = (int)SmartDashboard.getNumber("Upper beam range", 800);
+        lowerBeamRange = (int)SmartDashboard.getNumber("Lower beam range", 600);
+
+        beamBreak.setLimitsRaw(lowerBeamRange, upperBeamRange);
 
         SmartDashboard.putBoolean("Note Ready", !noteReady.get());
     }
