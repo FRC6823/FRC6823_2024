@@ -39,7 +39,7 @@ public class ShintakeSubsystem extends SubsystemBase {
 
         beamBreak = new AnalogTrigger(0);
         beamBreak.setAveraged(true);
-        beamBreak.setLimitsRaw(0,100);
+        beamBreak.setLimitsRaw(500,900);
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
 
     }
