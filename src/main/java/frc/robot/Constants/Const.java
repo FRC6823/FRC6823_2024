@@ -39,6 +39,7 @@ public class Const {
         //Positional Constants
         public static final double SPEAKER_SHOT = 0.399913;
         public static final double AMP_SHOT = 0.6231921; //placeholder
+        public static final double SPEAKER_SHOT_FAR_BACK = 0.42993; //COMPLETE GUESS THIS WILL NOT WORK!
     }
 
     public class SwerveDrive{
@@ -87,5 +88,4 @@ public class Const {
         public static final double extentionMAX = -95; 
     }
 
-    public static final double[] startingScorePose = new double[] {0.3, -90};
 }
