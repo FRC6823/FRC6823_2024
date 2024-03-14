@@ -39,6 +39,7 @@ public class TargetTrackDrive extends Command{
 
         armTable = new LinearInterpolationTable(
                        
+                new Point2D.Double(0.0,Const.Arm.DOWN_ANGLE),
                 new Point2D.Double(0.9798974895,0.3996),
                 new Point2D.Double(1.58002856, 0.444),
                 new Point2D.Double(1.590034012, 0.441),
