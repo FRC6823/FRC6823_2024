@@ -82,7 +82,7 @@ public class RobotContainer {
     handler = new PathHandler(drivetrain);
 
     autoChooser = new SendableChooser<Integer>();
-    autoChooser.setDefaultOption("Do Nothing", 1);
+    autoChooser.addOption("Do Nothing", 1);
     autoChooser.setDefaultOption("(Any) Shoot", 2);
     autoChooser.addOption("(Center) Shoot & Move back", 3);
     autoChooser.addOption("(Source) Shoot & Move back", 4);
