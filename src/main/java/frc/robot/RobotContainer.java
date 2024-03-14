@@ -82,8 +82,12 @@ public class RobotContainer {
     handler = new PathHandler(drivetrain);
 
     autoChooser = new SendableChooser<Integer>();
-    autoChooser.setDefaultOption("Shoot", 1);
-    autoChooser.addOption("Shoot & Move back", 2);
+    autoChooser.setDefaultOption("Do Nothing", 1);
+    autoChooser.setDefaultOption("(Any) Shoot", 2);
+    autoChooser.addOption("(Center) Shoot & Move back", 3);
+    autoChooser.addOption("(Source) Shoot & Move back", 4);
+    autoChooser.addOption("(Amp) Shoot & Move back", 5);
+    autoChooser.addOption("(Center) Two Note Shoot", 6);
     autoChooser.addOption("Testing (DO NOT USE)", 100);
 
     controlledReverse = new TimedShintake(shintake, -0.1, 0.1, false, false);
@@ -188,79 +192,81 @@ public class RobotContainer {
   }
 
   public Command getACG(int num){
-    //Do Nothing
-    if (num == 1){
-      return new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE));
-    }
-    if (num == 2){
+    switch(num) {
+      
+      //Do Nothing
+      case 1:
+        return new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE));
+      
       /*
-       * Shoot
-       */
-      return new SequentialCommandGroup(
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false));
-    }
-    else if (num == 3){
-      /*
-       * Shoot & move back
-       */
-      return new SequentialCommandGroup(
-                  //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
-                  new WaitUntilPose(armSubsystem),
-                  new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
-                                          new TimedShintake(shintake, 0.5, 3, false, false))
-                  /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
-    }
-    /*
-     *Shoot and move back at an angle (not tested) Source side
-     */
-    if (num == 4){
-      return new SequentialCommandGroup(
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                  new TimedDrive(drivetrain, -2, -0.1, 1, 3));
-    }
-    /*
-     *Shoot and move back at an angle (not tested) AMP side
-     */
-    if (num == 5) {
-            return new SequentialCommandGroup(
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                  new TimedDrive(drivetrain, -2, -0.1, -1, 3));
-    }
+      * (Any) Shoot
+      */
+      //case 2:
+      default:
+        return new SequentialCommandGroup(
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+                    new WaitUntilPose(armSubsystem),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false));
 
-    else if (num == 6){
       /*
-       * Shoot & move back pickup, and shoot
-       */
-      return new SequentialCommandGroup(
-                  //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
-                  new WaitUntilPose(armSubsystem),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false),
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
-                  new WaitUntilPose(armSubsystem),
-                  new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
-                                          new TimedShintake(shintake, 0.5, 3, false, false))
-                  new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT_FAR_BACK)),
-                  new TimedShintake(shintake, 0.6, 1.5, true, false));
-    }
+      * (Center) Shoot & move back
+      */
+       case 3:
+        return new SequentialCommandGroup(
+                    //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+                    new WaitUntilPose(armSubsystem),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
+                    new WaitUntilPose(armSubsystem),
+                    new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
+                                            new TimedShintake(shintake, 0.5, 3, false, false))
+                    /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
+      
+      /*
+      *  (Source Side) Shoot and move back at an angle (not tested)
+      */
+      case 4:
+        return new SequentialCommandGroup(
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+                    new WaitUntilPose(armSubsystem),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
+                    new TimedDrive(drivetrain, -2, -0.1, 1, 3));
+      
+      /*
+      * (Amp Side) Shoot and move back at an angle (not tested)
+      */
+      case 5:
+              return new SequentialCommandGroup(
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+                    new WaitUntilPose(armSubsystem),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
+                    new TimedDrive(drivetrain, -2, -0.1, -1, 3));
+      
 
-    else{
       /*
-       * Shoot at the ground!?!?
-       */
-      return new TimedShintake(shintake, 0, 0, false, false);
+      * (Center) Two Note - Shoot, move back, pickup, and shoot
+      */
+      case 6:
+        return new SequentialCommandGroup(
+                    //new InstantCommand(() -> drivetrain.resetFC((Math.PI) * 0.5)),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+                    new WaitUntilPose(armSubsystem),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
+                    new WaitUntilPose(armSubsystem),
+                    new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
+                                            new TimedShintake(shintake, 0.5, 3, false, false)),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT_FAR_BACK)),
+                    new TimedShintake(shintake, 0.6, 1.5, true, false));
+      /*
+      * For testing only
+      */
+      case 100:
+        return new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE));
+      
     }
   }
 }
