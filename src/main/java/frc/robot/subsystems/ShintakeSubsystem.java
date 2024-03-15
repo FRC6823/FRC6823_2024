@@ -66,7 +66,7 @@ public class ShintakeSubsystem extends SubsystemBase {
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
         SmartDashboard.putNumber("Beamvalue", beamValue.getAverageValue());
 
-        m_led = new AddressableLED(1); //idk PWM port
+        m_led = new AddressableLED(9);
         m_ledBuffer = new AddressableLEDBuffer(60);
         m_led.setLength(m_ledBuffer.getLength());
         m_led.setData(m_ledBuffer);
