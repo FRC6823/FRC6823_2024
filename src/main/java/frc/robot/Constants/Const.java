@@ -64,6 +64,9 @@ public class Const {
         //Yaw Lock PID Constants
         public static final double yawKp = 0.17;
         public static final double yawKi = 0.01;
+        //X lock PID Constants
+        public static final double xKp = 0.17;
+        public static final double xKi = 0.01;
 
 
         //Driver Constants

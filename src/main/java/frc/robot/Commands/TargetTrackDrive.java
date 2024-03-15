@@ -19,7 +19,7 @@ public class TargetTrackDrive extends Command{
     private ArmSubsystem arm;
     private LimeLightSubsystem ll;
     private CommandJoystick joy3;
-    private PIDController yawPid;
+    private PIDController yawPid, xPid;
     private double x, y;
     private LinearInterpolationTable armTable;
     private double setpoint = 0;
@@ -32,6 +32,9 @@ public class TargetTrackDrive extends Command{
         this.joy3 = joy3;
         yawPid = new PIDController(Const.SwerveDrive.yawKp, Const.SwerveDrive.yawKi, 0);
         yawPid.setSetpoint(0);
+        //Sets point so PID trys to get to 0
+        xPid = new PIDController(Const.SwerveDrive.xKp, Const.SwerveDrive.xKi, 0);
+        xPid.setSetpoint(0);
         x = 0;
         y = 0;
     }
@@ -55,18 +58,61 @@ public class TargetTrackDrive extends Command{
                 new Point2D.Double(2.562957981, 0.469),
                 new Point2D.Double(2.582944616, 0.471),
                 new Point2D.Double(2.588793974, 0.464));
+        /*armTable = new LinearInterpolationTable(
+
+            new Point2D.Double(0.9591711265, 0.3998),
+            new Point2D.Double(0.9591711265, 0.3998),
+            new Point2D.Double(1.570090956, 0.452),
+            new Point2D.Double(2.030236686, 0.456),
+            new Point2D.Double(2.525569243, 0.466),
+            new Point2D.Double(2.525569243, 0.466),
+            new Point2D.Double(2.931175362, 0.467),
+            new Point2D.Double(2.931175362, 0.467),
+            new Point2D.Double(0.0,Const.Arm.DOWN_ANGLE),
+            new Point2D.Double(0.9798974895,0.3996),
+            new Point2D.Double(1.58002856, 0.444),
+            new Point2D.Double(1.590034012, 0.441),
+            new Point2D.Double(1.590034669, 0.436),
+            new Point2D.Double(1.590036003, 0.443),
+            new Point2D.Double(1.590034669, 0.436),
+            new Point2D.Double(2.093782083, 0.458),
+            new Point2D.Double(2.093792399, 0.46),
+            new Point2D.Double(2.114816023, 0.455),
+            new Point2D.Double(2.393214575, 0.466),
+            new Point2D.Double(2.54296674, 0.467),
+            new Point2D.Double(2.558083314, 0.465),
+            new Point2D.Double(2.562957981, 0.469),
+            new Point2D.Double(2.582944616, 0.471),
+            new Point2D.Double(2.588793974, 0.464)
+
+        );*/
     }
     public void execute(){
+        //SPEAKER lineup
         if (ll.fHasValidTarget()){
-            x = -joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
-            y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
+            if ((ll.fGetId() == 8) || (ll.fGetId() ==4)){
+                x = -joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
+                y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
 
-            yawPid.setP(Const.SwerveDrive.yawKp * ((Math.abs(x) + y * y)/21 + 1));
+                yawPid.setP(Const.SwerveDrive.yawKp * ((Math.abs(x) + y * y)/21 + 1));
 
-            swerve.driveFC(new ChassisSpeeds(x, y, yawPid.calculate(ll.fGetTx())));
-            //Sets arm angle to desired angle based on distance
-            setpoint = armTable.getOutput(Math.sqrt(Math.pow(ll.fGet3dTX(), 2) + Math.pow(ll.fGet3dTZ(), 2)));
-            arm.goToAngle(setpoint);
+                swerve.driveFC(new ChassisSpeeds(x, y, yawPid.calculate(ll.fGetTx())));
+                //Sets arm angle to desired angle based on distance
+                setpoint = armTable.getOutput(Math.sqrt(Math.pow(ll.fGet3dTX(), 2) + Math.pow(ll.fGet3dTZ(), 2)));
+                arm.goToAngle(setpoint);
+            }
+            //AMP lineup
+            else if ((ll.fGetId() == 8) || (ll.fGetId() == 4)){
+                x = -joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
+                y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
+                //SetsP for PID Controllers
+                yawPid.setP(Const.SwerveDrive.yawKp * ((Math.abs(x) + y * y)/21 + 1));
+                xPid.setP(Const.SwerveDrive.xKp * ((Math.abs(x) + y * y)/21 + 1));
+                //Drives FC while trying to get x and yaw to 0 to line up
+                swerve.driveFC(new ChassisSpeeds(xPid.calculate(ll.fGet3dTX()), y, yawPid.calculate(ll.fGetTx())));
+                //Sets arm angle to AMP_Shot
+                arm.goToAngle(Const.Arm.AMP_SHOT);
+            }
         }
         else{
             swerve.driveFC(new ChassisSpeeds(((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed))

@@ -224,7 +224,7 @@ public class RobotContainer {
                     /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
       
       /*
-      *  (Source Side) Shoot and move back at an angle (not tested)
+      *  ( Red Source Side, Blue Amp) Shoot and move back at an angle (not tested)
       */
       case 4:
         return new SequentialCommandGroup(
@@ -232,10 +232,10 @@ public class RobotContainer {
                     new WaitUntilPose(armSubsystem),
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                    new TimedDrive(drivetrain, -2, -0.1, 1, 3));
+                    new TimedDrive(drivetrain, -2, -1, 0, 3));
       
       /*
-      * (Amp Side) Shoot and move back at an angle (not tested)
+      * (Red Amp Side, Blue Source) Shoot and move back at an angle (not tested)
       */
       case 5:
               return new SequentialCommandGroup(
@@ -243,7 +243,7 @@ public class RobotContainer {
                     new WaitUntilPose(armSubsystem),
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                    new TimedDrive(drivetrain, -2, -0.1, -1, 3));
+                    new TimedDrive(drivetrain, -2, -1, 0, 3));
       
 
       /*
