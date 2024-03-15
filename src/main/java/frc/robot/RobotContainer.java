@@ -206,8 +206,10 @@ public class RobotContainer {
         return new SequentialCommandGroup(
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
                     new WaitUntilPose(armSubsystem),
-                    new TimedShintake(shintake, 0.6, 1.5, true, false));
-
+                    new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
+                    new WaitUntilPose(armSubsystem));
+        
       /*
       * (Center) Shoot & move back
       */
@@ -219,7 +221,7 @@ public class RobotContainer {
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
                     new WaitUntilPose(armSubsystem),
-                    new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 0.5), 
+                    new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 1.5), 
                                             new TimedShintake(shintake, 0.5, 3, false, false))
                     /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
       

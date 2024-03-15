@@ -71,6 +71,8 @@ public class Const {
 
         //Driver Constants
         public static final double deadband = 0.1;
+        public static double yKp = 0.17;
+        public static double yKi = 0.01;
     }
 
     public class Shintake{

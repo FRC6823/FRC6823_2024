@@ -19,7 +19,7 @@ public class TargetTrackDrive extends Command{
     private ArmSubsystem arm;
     private LimeLightSubsystem ll;
     private CommandJoystick joy3;
-    private PIDController yawPid, xPid;
+    private PIDController yawPid, yPid;
     private double x, y;
     private LinearInterpolationTable armTable;
     private double setpoint = 0;
@@ -33,8 +33,8 @@ public class TargetTrackDrive extends Command{
         yawPid = new PIDController(Const.SwerveDrive.yawKp, Const.SwerveDrive.yawKi, 0);
         yawPid.setSetpoint(0);
         //Sets point so PID trys to get to 0
-        xPid = new PIDController(Const.SwerveDrive.xKp, Const.SwerveDrive.xKi, 0);
-        xPid.setSetpoint(0);
+        yPid = new PIDController(Const.SwerveDrive.yKp, Const.SwerveDrive.yKi, 0);
+        yPid.setSetpoint(0);
         x = 0;
         y = 0;
     }
@@ -108,9 +108,9 @@ public class TargetTrackDrive extends Command{
                 y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
                 //SetsP for PID Controllers
                 yawPid.setP(Const.SwerveDrive.yawKp * ((Math.abs(x) + y * y)/21 + 1));
-                xPid.setP(Const.SwerveDrive.xKp * ((Math.abs(x) + y * y)/21 + 1));
+                yPid.setP(Const.SwerveDrive.yKp * ((Math.abs(x) + y * y)/21 + 1));
                 //Drives FC while trying to get x and yaw to 0 to line up
-                swerve.driveFC(new ChassisSpeeds(xPid.calculate(ll.fGet3dTX()), y, yawPid.calculate(ll.fGetTx())));
+                swerve.driveFC(new ChassisSpeeds(0, yPid.calculate(ll.fGet3dTX()), yawPid.calculate(ll.fGetTx())));
                 //Sets arm angle to AMP_Shot
                 arm.goToAngle(Const.Arm.AMP_SHOT);
             }

@@ -121,6 +121,10 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         return false;
     }
 
+    public boolean disableYawLock(){
+        return yawLock == false;
+    }
+
     public void periodic(){
         SmartDashboard.putNumber("xpose", m_odometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("ypose", m_odometry.getEstimatedPosition().getY());

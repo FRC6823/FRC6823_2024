@@ -18,8 +18,13 @@ public class FCD extends Command{
 
     @Override
     public void execute(){
+        if ((joy3.getRawAxis(0) == 0) && (joy3.getRawAxis(1) == 0) && (joy3.getRawAxis(2) == 0)){
+            swerve.stop();
+        }
+        else{
         swerve.driveFC(new ChassisSpeeds(((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed))
                             ,(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed)
                             ,(-joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxAngularRate)));
+        }
     }
 }
