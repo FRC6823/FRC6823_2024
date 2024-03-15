@@ -8,9 +8,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Blinkin;
 import frc.robot.Constants.Const;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.AnalogTriggerOutput;
@@ -31,8 +30,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     private AnalogInput beamValue;
     private AnalogTrigger beamBreak;
     private AnalogTriggerOutput noteReady;
-    private AddressableLED m_led;
-    private AddressableLEDBuffer m_ledBuffer;
+    private Blinkin lights;
     private ShuffleboardTab preferences = Shuffleboard.getTab("Preferences");
     private int upperBeamRange = 
         (int) preferences.add("Upper beam range", 900)
@@ -65,12 +63,6 @@ public class ShintakeSubsystem extends SubsystemBase {
         beamBreak.setLimitsRaw(lowerBeamRange,upperBeamRange);
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
         SmartDashboard.putNumber("Beamvalue", beamValue.getAverageValue());
-
-        m_led = new AddressableLED(9);
-        m_ledBuffer = new AddressableLEDBuffer(60);
-        m_led.setLength(m_ledBuffer.getLength());
-        m_led.setData(m_ledBuffer);
-        m_led.start();
     }
 
     public void setShootSpeed(double speed) {
@@ -97,6 +89,10 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.intakespeed = intakespeed;
     }
 
+    public void lights(Blinkin lights) {
+        this.lights = lights;
+    }
+
     public void periodic() {
         topMotor.set(-speed);
         botMotor.set(-speed);
@@ -112,12 +108,9 @@ public class ShintakeSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Note Ready", !noteReady.get());
 
         if (!noteReady.get()) {
-            for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-                m_ledBuffer.setRGB(i, 255, 16, 240); //color is pink
-             }
-             m_led.setData(m_ledBuffer);
+            lights.setIntakeFull();
         } else if (noteReady.get()) {
-            m_led.stop();
+            lights.setIntakeEmpty();
         }
     }
 
