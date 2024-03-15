@@ -90,7 +90,7 @@ public class TargetTrackDrive extends Command{
     public void execute(){
         //SPEAKER lineup
         if (ll.fHasValidTarget()){
-            if ((ll.fGetId() == 8) || (ll.fGetId() ==4)){
+            if ((ll.fGetId() == 7) || (ll.fGetId() ==4)){
                 x = -joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
                 y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
 
@@ -101,8 +101,9 @@ public class TargetTrackDrive extends Command{
                 setpoint = armTable.getOutput(Math.sqrt(Math.pow(ll.fGet3dTX(), 2) + Math.pow(ll.fGet3dTZ(), 2)));
                 arm.goToAngle(setpoint);
             }
+            
             //AMP lineup
-            else if ((ll.fGetId() == 8) || (ll.fGetId() == 4)){
+            else if ((ll.fGetId() == 5) || (ll.fGetId() == 6)){
                 x = -joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
                 y = -joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/4.25) * Const.SwerveDrive.MaxSpeed;
                 //SetsP for PID Controllers

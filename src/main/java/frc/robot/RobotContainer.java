@@ -85,8 +85,8 @@ public class RobotContainer {
     autoChooser.addOption("Do Nothing", 1);
     autoChooser.setDefaultOption("(Any) Shoot", 2);
     autoChooser.addOption("(Center) Shoot & Move back", 3);
-    autoChooser.addOption("(Source) Shoot & Move back", 4);
-    autoChooser.addOption("(Amp) Shoot & Move back", 5);
+    autoChooser.addOption("(Red Alliance Source Side) Shoot & Move back", 4);
+    autoChooser.addOption("(Red Alliance Amp Side) Shoot & Move back", 5);
     autoChooser.addOption("(Center) Two Note Shoot", 6);
     autoChooser.addOption("Testing (DO NOT USE)", 100);
 
@@ -219,7 +219,7 @@ public class RobotContainer {
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
                     new WaitUntilPose(armSubsystem),
-                    new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
+                    new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 0.5), 
                                             new TimedShintake(shintake, 0.5, 3, false, false))
                     /*new TimedShintake(shintake, 0.6, 1.5, true)*/);
       
@@ -232,18 +232,19 @@ public class RobotContainer {
                     new WaitUntilPose(armSubsystem),
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                    new TimedDrive(drivetrain, -2, -1, 0, 3));
+                    new TimedDrive(drivetrain, 2, 0, 0, 1.5));
       
       /*
-      * (Red Amp Side, Blue Source) Shoot and move back at an angle (not tested)
+      * (Red Alliance Source side) Shoot and move back at an angle (not tested)
       */
       case 5:
               return new SequentialCommandGroup(
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
                     new WaitUntilPose(armSubsystem),
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
+                    new InstantCommand(() -> shintake.stop()),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
-                    new TimedDrive(drivetrain, -2, -1, 0, 3));
+                    new TimedDrive(drivetrain, 2, 1, 0, 1));
       
 
       /*
@@ -257,9 +258,9 @@ public class RobotContainer {
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
                     new WaitUntilPose(armSubsystem),
-                    new ParallelCommandGroup(new TimedDrive(drivetrain, -2, -0.1, 0, 3), 
-                                            new TimedShintake(shintake, 0.5, 3, false, false)),
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT_FAR_BACK)),
+                    new ParallelCommandGroup(new TimedDrive(drivetrain, 2, -0.1, 0, 0.5), 
+                                            new TimedShintake(shintake, 0.5, 3, false, false)),
                     new TimedShintake(shintake, 0.6, 1.5, true, false));
       /*
       * For testing only
