@@ -33,10 +33,10 @@ public class ShintakeSubsystem extends SubsystemBase {
     private Blinkin lights;
     private ShuffleboardTab preferences = Shuffleboard.getTab("Preferences");
     private int upperBeamRange = 
-        (int) preferences.add("Upper beam range", 1200)
+        (int) preferences.add("Upper beam range", 900)
         .withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min",0,"max",4000))
-            .getEntry().getInteger(1200);
+            .getEntry().getInteger(900);
     private int lowerBeamRange = 
         (int)preferences.add("Lower beam range", 0)
         .withWidget(BuiltInWidgets.kNumberSlider)
