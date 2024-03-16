@@ -109,8 +109,8 @@ public class TargetTrackDrive extends Command{
                 //SetsP for PID Controllers
                 yawPid.setP(Const.SwerveDrive.yawKp * ((Math.abs(x) + y * y)/21 + 1));
                 yPid.setP(Const.SwerveDrive.yKp * ((Math.abs(x) + y * y)/21 + 1));
-                //Drives FC while trying to get x and yaw to 0 to line up
-                swerve.driveFC(new ChassisSpeeds(0, yPid.calculate(ll.fGet3dTX()), yawPid.calculate(ll.fGetTx())));
+                //Drives FC while trying to get y and yaw to 0 to line up
+                swerve.driveFC(new ChassisSpeeds(x, yPid.calculate(ll.fGet3dTX()), yawPid.calculate(ll.fGetTx())));
                 //Sets arm angle to AMP_Shot
                 arm.goToAngle(Const.Arm.AMP_SHOT);
             }
