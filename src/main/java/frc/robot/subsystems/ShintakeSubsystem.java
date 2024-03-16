@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Blinkin;
 import frc.robot.Constants.Const;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogTrigger;
@@ -29,6 +30,7 @@ public class ShintakeSubsystem extends SubsystemBase {
     private AnalogInput beamValue;
     private AnalogTrigger beamBreak;
     private AnalogTriggerOutput noteReady;
+    private Blinkin lights;
     private ShuffleboardTab preferences = Shuffleboard.getTab("Preferences");
     private int upperBeamRange = 
         (int) preferences.add("Upper beam range", 900)
@@ -61,7 +63,6 @@ public class ShintakeSubsystem extends SubsystemBase {
         beamBreak.setLimitsRaw(lowerBeamRange,upperBeamRange);
         noteReady = beamBreak.createOutput(AnalogTriggerOutput.AnalogTriggerType.kInWindow);
         SmartDashboard.putNumber("Beamvalue", beamValue.getAverageValue());
-
     }
 
     public void setShootSpeed(double speed) {
@@ -88,6 +89,9 @@ public class ShintakeSubsystem extends SubsystemBase {
         this.intakespeed = intakespeed;
     }
 
+    public void lights(Blinkin lights) {
+        this.lights = lights;
+    }
 
     public void periodic() {
         topMotor.set(-speed);
@@ -99,9 +103,15 @@ public class ShintakeSubsystem extends SubsystemBase {
         //upperBeamRange = (int)SmartDashboard.getNumber("Upper beam range", 800);
         //lowerBeamRange = (int)SmartDashboard.getNumber("Lower beam range", 600);
 
-        beamBreak.setLimitsRaw(lowerBeamRange, upperBeamRange);
+        //beamBreak.setLimitsRaw(lowerBeamRange, upperBeamRange);
 
         SmartDashboard.putBoolean("Note Ready", !noteReady.get());
+
+        if (!noteReady.get()) {
+            lights.setIntakeFull();
+        } else if (noteReady.get()) {
+            lights.setIntakeEmpty();
+        }
     }
 
     public void stop() {

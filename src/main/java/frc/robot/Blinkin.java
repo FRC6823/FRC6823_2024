@@ -10,7 +10,16 @@ public class Blinkin {
 		blinkin = new Spark(PWM);
 	}
 
-	public void lightsNormal() {
-		blinkin.set(0.93);
+	public void setLightsNormal() {
+		blinkin.set(0.93); //white
 	}
+
+	public void setIntakeFull() {
+		blinkin.set(0.65); //orange
+	}
+
+	public void setIntakeEmpty() {
+		setLightsNormal();
+	}
+
 }

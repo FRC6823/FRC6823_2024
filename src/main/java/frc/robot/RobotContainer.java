@@ -70,9 +70,10 @@ public class RobotContainer {
 
     armSubsystem = new ArmSubsystem();
     drivetrain = TunerConstants.DriveTrain;
-    shintake = new ShintakeSubsystem();
-    ll = new LimeLightSubsystem();
     lights = new Blinkin(9);
+    shintake = new ShintakeSubsystem();
+    shintake.lights(lights);
+    ll = new LimeLightSubsystem();
     climberSubsystem = new ClimberSubsystem();
 
     fcd = new FCD(drivetrain, hotas3);
