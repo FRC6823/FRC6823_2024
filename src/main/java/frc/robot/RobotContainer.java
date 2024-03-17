@@ -95,6 +95,7 @@ public class RobotContainer {
 
     Shuffleboard.getTab("Preferences").add("Autonomus", autoChooser);
 
+    
     drivetrain.resetFC(0);
    
     configureBindings();
@@ -154,7 +155,7 @@ public class RobotContainer {
      * Intake while running shooter backwards (to stop notes).
      * Once done, reverse intake briefly so the note isn't touching the shooter
      */
-    gamepad4.axisGreaterThan(2, 0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.3)))
+    gamepad4.axisGreaterThan(2, 0.5).onTrue(new InstantCommand(() -> shintake.setIntakeSpeed(0.75)))
                                     .onTrue(new InstantCommand(() -> shintake.setShootSpeed(-0.1)))
                                     .onFalse(controlledReverse);
 
@@ -167,7 +168,7 @@ public class RobotContainer {
      * This seems like both the wrong place to put this light code and also the wrong way to run that method
      * Most likely, we either want to pre-define a few commands, or we should have a LEDSubsytem to which other subsystems can send requests
      *    both of which would then be triggered upon events
-     */ 
+     */  
      //new InstantCommand(() -> lights.lightsNormal());
 
     if (Utils.isSimulation()) {
@@ -233,8 +234,9 @@ public class RobotContainer {
         return new SequentialCommandGroup(
                     new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
                     new WaitUntilPose(armSubsystem),
-                    new TimedShintake(shintake, 0.6, 1.5, true, false),
-                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
+                    new TimedShintake(shintake, 0.8, 1.5, true, false),
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
+                    new WaitUntilPose(armSubsystem), 
                     new TimedDrive(drivetrain, 2, 0, 0, 1.5));
       
       /*

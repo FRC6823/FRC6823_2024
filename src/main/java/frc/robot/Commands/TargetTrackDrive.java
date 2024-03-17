@@ -49,15 +49,14 @@ public class TargetTrackDrive extends Command{
                 new Point2D.Double(1.590034669, 0.436),
                 new Point2D.Double(1.590036003, 0.443),
                 new Point2D.Double(1.590034669, 0.436),
-                new Point2D.Double(2.093782083, 0.458),
-                new Point2D.Double(2.093792399, 0.46),
-                new Point2D.Double(2.114816023, 0.455),
-                new Point2D.Double(2.393214575, 0.466),
-                new Point2D.Double(2.54296674, 0.467),
-                new Point2D.Double(2.558083314, 0.465),
-                new Point2D.Double(2.562957981, 0.469),
-                new Point2D.Double(2.582944616, 0.471),
-                new Point2D.Double(2.588793974, 0.464));
+                new Point2D.Double(2.093782083, 0.458));
+                //new Point2D.Double(2.093792399, 0.46),
+                //new Point2D.Double(2.114816023, 0.455),
+                //new Point2D.Double(2.393214575, 0.466),
+                //new Point2D.Double(2.54296674, 0.467),
+                //new Point2D.Double(2.558083314, 0.465),
+                //new Point2D.Double(2.562957981, 0.469),
+                //new Point2D.Double(2.582944616, 0.471));
         /*armTable = new LinearInterpolationTable(
 
             new Point2D.Double(0.9591711265, 0.3998),
