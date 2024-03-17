@@ -272,7 +272,13 @@ public class RobotContainer {
       * For testing only
       */
       case 100:
-        return new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE));
+        return new SequentialCommandGroup(handler.getPath("New Path"),
+        new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.SPEAKER_SHOT)),
+        new WaitUntilPose(armSubsystem),
+        new TimedShintake(shintake, 0.6, 1.5, true, false),
+        new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.DOWN_ANGLE)),
+        new WaitUntilPose(armSubsystem),
+        handler.getPath("Example Path"));
       
     }
   }

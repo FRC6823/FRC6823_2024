@@ -32,10 +32,10 @@ public class PathHandler {
         replanningConfig = new ReplanningConfig(false, false);
     }
 
-    public Command getPath(){
+    public Command getPath(String PathName){
         PathPlannerPath path;
         
-        path = PathPlannerPath.fromPathFile("New Path");
+        path = PathPlannerPath.fromPathFile(PathName);
 
         return new FollowPathHolonomic(path, 
         swerveDriveSubsystem::getPose, 
