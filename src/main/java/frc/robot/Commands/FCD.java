@@ -22,9 +22,9 @@ public class FCD extends Command{
             swerve.stop();
         }
         else{
-        swerve.driveFC(new ChassisSpeeds(((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/3) * Const.SwerveDrive.MaxSpeed))
-                            ,(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/3) * Const.SwerveDrive.MaxSpeed)
-                            ,(-joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1.25)/3) * Const.SwerveDrive.MaxAngularRate)));
+        swerve.driveFC(new ChassisSpeeds(((-joy3.getRawAxis(1) * (-(joy3.getRawAxis(2) - 1.25)/2.25) * Const.SwerveDrive.MaxSpeed))
+                            ,(-joy3.getRawAxis(0) * (-(joy3.getRawAxis(2) - 1.25)/2.25) * Const.SwerveDrive.MaxSpeed)
+                            ,(-joy3.getRawAxis(5) * (-(joy3.getRawAxis(2) - 1.25)/3.5) * Const.SwerveDrive.MaxAngularRate)));
         }
     }
 }

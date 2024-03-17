@@ -95,7 +95,7 @@ public class RobotContainer {
 
     Shuffleboard.getTab("Preferences").add("Autonomus", autoChooser);
 
-    
+
     drivetrain.resetFC(0);
    
     configureBindings();
@@ -248,7 +248,8 @@ public class RobotContainer {
                     new WaitUntilPose(armSubsystem),
                     new TimedShintake(shintake, 0.6, 1.5, true, false),
                     new InstantCommand(() -> shintake.stop()),
-                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)), 
+                    new InstantCommand(() -> armSubsystem.goToAngle(Const.Arm.UP_ANGLE)),
+                    new WaitUntilPose(armSubsystem), 
                     new TimedDrive(drivetrain, 2, 1, 0, 1));
       
 
